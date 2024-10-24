@@ -39,16 +39,17 @@ class IcarasdkViewModel extends ChangeNotifier {
 
       IcaraSdkMessageResponse result =
           IcaraSdkMessageResponse.fromJson(jsonDecode(strJson));
+      //Handle Result
       print(result.result);
     } else {
       debugPrint('Icara Initiated and ready');
     }
   }
 
-  void sendPing() {
+  Future callMethod(String method, List? params) async {
     _id++;
     var message =
-        IcaraSdkMessageRequest(method: 'Ping', id: _id, params: ['Test']);
+        IcaraSdkMessageRequest(method: method, id: _id, params: params);
     var jsonEncodedBody = jsonEncode(message.toJson());
     var contentLengthHeader = 'Content-Length: ${jsonEncodedBody.length}';
     var messagePayload = '$contentLengthHeader\r\n\r\n$jsonEncodedBody';
