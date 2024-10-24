@@ -1,16 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:ICARA/pages/risk_inputs.dart';
+// import 'package:ICARA/pages/risk_inputs.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class CapitalModeling extends StatefulWidget {
+  const CapitalModeling({super.key});
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _CapitalModelingState();
   }
 }
@@ -37,7 +38,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
     List<List<dynamic>> rows = [];
 
     for (var table in excel.tables.keys) {
-      print(table); //sheet Name
+      print(table); // Sheet name
       print(excel.tables[table]?.maxColumns);
       print(excel.tables[table]?.maxRows);
       for (var row in excel.tables[table]!.rows) {
@@ -60,11 +61,11 @@ class _CapitalModelingState extends State<CapitalModeling> {
       case 0:
         return _buildExcelViewer(); // Default Excel Viewer content
       case 1:
-        return Center(child: Text('Content of Tab 1'));
+        return const Center(child: Text('Content of Tab 1'));
       case 2:
-        return Center(child: Text('Content of Tab 2'));
+        return const Center(child: Text('Content of Tab 2'));
       case 3:
-        return Center(child: Text('Content of Tab 3'));
+        return const Center(child: Text('Content of Tab 3'));
       default:
         return _buildExcelViewer();
     }
@@ -75,20 +76,41 @@ class _CapitalModelingState extends State<CapitalModeling> {
     return Center(
       child: Column(
         children: [
-          ElevatedButton(
-            onPressed: _pickExcelFile,
-            child: const Text('Import Excel'),
+          Container(
+            margin: const EdgeInsets.only(top: 16),
+            child: ElevatedButton(
+              onPressed: _pickExcelFile,
+              child: const Text('Import Excel'),
+            ),
           ),
           Expanded(
             child: _rows.isEmpty
                 ? const Center(child: Text('No Data Loaded'))
-                : ListView.builder(
-                    itemCount: _rows.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(_rows[index].join(', ')),
-                      );
-                    },
+                : DataTable(
+                  columns: _rows.isNotEmpty
+                    ? List.generate(
+                      _rows[0].length,
+                      (index) => DataColumn(
+                        label: Text(
+                        'Column ${index + 1}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      )
+                    : [],
+                  rows: _rows.isNotEmpty
+                    ? List.generate(
+                      _rows.length,
+                      (index) => DataRow(
+                        cells: List.generate(
+                        _rows[index].length,
+                        (cellIndex) => DataCell(
+                          Text(_rows[index][cellIndex].toString()),
+                        ),
+                        ),
+                      ),
+                      )
+                    : [],
                   ),
           ),
         ],
@@ -117,7 +139,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
                     _currentIndex = 0;
                   });
                 },
-                child: Text('Excel Viewer'),
+                child: const Text('Risk Inputs'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -125,7 +147,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
                     _currentIndex = 1;
                   });
                 },
-                child: Text('Tab 1'),
+                child: const Text('Tab 1'),
               ),
               ElevatedButton(
                 onPressed: () {

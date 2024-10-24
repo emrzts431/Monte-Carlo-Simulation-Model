@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ICARA/main.dart';
+// import 'package:ICARA/main.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:provider/provider.dart';

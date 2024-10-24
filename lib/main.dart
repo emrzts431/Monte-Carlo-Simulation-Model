@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
@@ -32,6 +30,7 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       //theme: ThemeData(elevatedButtonTheme: ),
       home: HomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

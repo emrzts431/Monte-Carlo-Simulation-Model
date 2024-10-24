@@ -1,19 +1,25 @@
 import 'package:ICARA/pages/capital_modeling.dart';
 import 'package:ICARA/pages/home_page.dart';
-import 'package:ICARA/pages/risk_inputs.dart';
+import 'package:ICARA/pages/raroc.dart';
+import 'package:ICARA/pages/insurance_pricing.dart';
 import 'package:ICARA/pages/settings.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
+  const CustomNavigationDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+      ),
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
+            decoration: const BoxDecoration(
+              color: Color(0xff00B0F0),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,7 +29,7 @@ class CustomNavigationDrawer extends StatelessWidget {
                   'assets/img/mc_risk_modelling.png',
                   scale: 5,
                 ),
-                Text(
+                const Text(
                   'Monte Carlo Plus',
                   style: TextStyle(
                     color: Colors.white,
@@ -49,7 +55,8 @@ class CustomNavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CapitalModeling()),
+                MaterialPageRoute(
+                    builder: (context) => const CapitalModeling()),
               );
             },
           ),
@@ -59,7 +66,7 @@ class CustomNavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RiskInputs()),
+                MaterialPageRoute(builder: (context) => const Raroc()),
               );
             },
           ),
@@ -69,7 +76,8 @@ class CustomNavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RiskInputs()),
+                MaterialPageRoute(
+                    builder: (context) => const InsurancePricing()),
               );
             },
           ),
@@ -79,22 +87,20 @@ class CustomNavigationDrawer extends StatelessWidget {
             endIndent: 5,
           ),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              // Handle navigation here
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Settings()),
-              ); // Close the drawer
+              );
             },
           ),
           ListTile(
             leading: const Icon(Icons.question_mark_rounded),
             title: const Text('Help'),
             onTap: () {
-              // Handle navigation here
-              Navigator.pop(context); // Close the drawer
+              Navigator.pop(context);
             },
           ),
         ],
