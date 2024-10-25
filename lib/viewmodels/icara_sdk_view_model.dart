@@ -20,12 +20,12 @@ class IcarasdkViewModel extends ChangeNotifier {
   Process? _csharpProcess;
 
   init() async {
-    // if (!_isSdkStarted) {
-    //   _csharpProcess = await Process.start(_serviceExecutable, []);
-    //   _csharpProcess?.stdout.listen(_onDataReceived);
-    //   debugPrint('Initiated Csharp process');
-    //   _isSdkStarted = true;
-    // }
+    if (!_isSdkStarted) {
+      _csharpProcess = await Process.start(_serviceExecutable, []);
+      _csharpProcess?.stdout.listen(_onDataReceived);
+      debugPrint('Initiated Csharp process');
+      _isSdkStarted = true;
+    }
   }
 
   dynamic _onDataReceived(event) {
