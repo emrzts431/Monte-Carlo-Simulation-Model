@@ -2,10 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 // import 'package:ICARA/pages/risk_inputs.dart';
+import 'package:ICARA/pages/home_page.dart';
+import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class CapitalModeling extends StatefulWidget {
   const CapitalModeling({super.key});
@@ -19,8 +23,11 @@ class CapitalModeling extends StatefulWidget {
 class _CapitalModelingState extends State<CapitalModeling> {
   int _currentIndex = 0; // Variable to track the selected content
   List<List<dynamic>> _rows = []; // Store the Excel rows
-  List<Data?> _columnNames = []; // Column names
+  List<String> _columnNames = []; // Column names
   final _scrollController = ScrollController();
+  final _logger = Logger(
+    printer: PrettyPrinter(methodCount: 1),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -29,56 +36,84 @@ class _CapitalModelingState extends State<CapitalModeling> {
       appBar: AppBar(
         title: const Text('Capital Modelling'),
         backgroundColor: Colors.white,
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0)),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+            child: const Text('Risk Inputs'),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0)),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 1;
+              });
+            },
+            child: const Text('Validation'),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0)),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 2;
+              });
+            },
+            child: Text('Correlation Inputs'),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0)),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 3;
+              });
+            },
+            child: Text('Simulation'),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0)),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 3;
+              });
+            },
+            child: Text('Detailed Report'),
+          ),
+          const SizedBox(
+            width: 50,
+          ),
+        ],
       ),
       drawer: const CustomNavigationDrawer(),
       body: Column(
         children: [
           // Buttons at the top
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 0;
-                  });
-                },
-                child: const Text('Risk Inputs'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 1;
-                  });
-                },
-                child: const Text('Validation'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 2;
-                  });
-                },
-                child: Text('Correlation Inputs'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 3;
-                  });
-                },
-                child: Text('Simulation'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 3;
-                  });
-                },
-                child: Text('Detailed Report'),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+
+          //   ],
+          // ),
           // Dynamic content based on the button clicked
           Expanded(
             child: _getContentWidget(),
@@ -141,7 +176,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
                                   _rows[0].length,
                                   (index) => DataColumn(
                                     label: Text(
-                                      '${_columnNames[index]!.value}',
+                                      _columnNames[index],
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -197,13 +232,17 @@ class _CapitalModelingState extends State<CapitalModeling> {
       print(excel.tables[table]?.maxColumns);
       print(excel.tables[table]?.maxRows);
       if (excel.tables[table]?.maxColumns != 0) {
-        _columnNames = excel.tables[table]!.rows[0];
+        _columnNames = excel.tables[table]!.rows[0]
+            .map((d) => d!.value.toString())
+            .toList();
+        _columnNames.insert(0, "Risk No");
         for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
           List<dynamic> customRow = [];
           for (var cell in excel.tables[table]!.rows[i]) {
             cell != null ? customRow.add(cell.value) : debugPrint("Null Value");
           }
           if (!customRow.contains(null)) {
+            customRow.insert(0, "Risk ${i}");
             rows.add(customRow);
           }
         }
@@ -223,7 +262,17 @@ class _CapitalModelingState extends State<CapitalModeling> {
   }
 
   Future _saveRisks() async {
-    //TODO: Here we fucking go!
+    final List<String> _cellValues = [];
+    for (var row in _rows) {
+      for (var cell in row) {
+        _cellValues.add(cell.toString());
+      }
+    }
+
+    final result = await context
+        .read<IcarasdkViewModel>()
+        .callMethod('SaveRiskInputs', [_cellValues]);
+    _logger.d(result.toJson());
   }
 
   // Method to return content based on the selected index
