@@ -22,10 +22,11 @@ class _HomePageState extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomNavigationDrawer(),
+      drawer: const CustomNavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text('Monte Carlo Simulation Model'),
+        surfaceTintColor: Colors.white,
       ),
       body: Center(
         child: Image.asset(

@@ -6,8 +6,12 @@ class Settings extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
-      body: Column(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
+      body: const Column(
         children: [
           ListTile(
             title: Text("Bucket Names"),

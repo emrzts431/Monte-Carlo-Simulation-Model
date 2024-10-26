@@ -36,73 +36,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
       appBar: AppBar(
         title: const Text('Capital Modelling'),
         backgroundColor: Colors.white,
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0)),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 0;
-              });
-            },
-            child: const Text('Risk Inputs'),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0)),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 1;
-              });
-            },
-            child: const Text('Validation'),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0)),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 2;
-              });
-            },
-            child: Text('Correlation Inputs'),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0)),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 3;
-              });
-            },
-            child: Text('Simulation'),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0)),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 3;
-              });
-            },
-            child: Text('Detailed Report'),
-          ),
-          const SizedBox(
-            width: 50,
-          ),
-        ],
+        surfaceTintColor: Colors.white,
       ),
       drawer: const CustomNavigationDrawer(),
       body: Column(

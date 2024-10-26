@@ -11,6 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size
+
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   json_annotation: ^4.8.1
