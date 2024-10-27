@@ -41,6 +41,8 @@ class IcarasdkViewModel extends ChangeNotifier {
   dynamic _onDataReceived(event) {
     var strMessage = utf8.decode(event);
     if (strMessage != 'Icara SDK started\r\n') {
+      _isLoading = false;
+      notifyListeners();
       var strJson = strMessage
           .split('\r\n')
           .where((element) => !element.contains('Content-Length'))
@@ -60,6 +62,8 @@ class IcarasdkViewModel extends ChangeNotifier {
       String method, List? params) async {
     _sdkResponseCompleter = Completer();
     _id++;
+    _isLoading = true;
+    notifyListeners();
     var message =
         IcaraSdkMessageRequest(method: method, id: _id, params: params);
     var jsonEncodedBody = jsonEncode(message.toJson());

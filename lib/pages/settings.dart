@@ -15,6 +15,10 @@ class Settings extends StatelessWidget {
         children: [
           ListTile(
             title: const Text("Bucket Names"),
+            leading: Image.asset(
+              'assets/icons/manage bucket setting.png',
+              scale: 10,
+            ),
             onTap: () {
               showDialog(
                 context: context,
@@ -77,6 +81,10 @@ class Settings extends StatelessWidget {
           ListTile(
             title: const Text(
               "Bucket 1 Categories",
+            ),
+            leading: Image.asset(
+              'assets/icons/Sand_bucket.png',
+              scale: 10,
             ),
             onTap: () {
               String selectedChoice = 'Use default';
