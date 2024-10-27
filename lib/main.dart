@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:ICARA/services/navigation_service.dart';
+import 'package:ICARA/services/scaffold_messenger_service.dart';
+import 'package:ICARA/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
@@ -15,7 +18,7 @@ void main() {
     setWindowTitle('Monte Carlo Simulation Model');
     setWindowMinSize(const Size(1000, 500));
   }
-
+  setUpLocator();
   runApp(
     MultiProvider(
       providers: [
@@ -37,6 +40,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Monte Carlo Simulation Model',
       color: Colors.white,
+      navigatorKey: locator<NavigationService>().navigatorKey,
+      scaffoldMessengerKey: locator<ScaffoldMessengerService>().scaffoldKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: createMaterialColor(Colors.black),

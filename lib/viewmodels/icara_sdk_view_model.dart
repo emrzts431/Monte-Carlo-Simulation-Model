@@ -1,3 +1,6 @@
+import 'package:ICARA/data/preferences.dart';
+import 'package:ICARA/widgets/snackbar_holder.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -21,21 +24,43 @@ class IcarasdkViewModel extends ChangeNotifier {
 
   bool _isSdkStarted = false;
 
-  //TODO: Find a global spot or make it selectable!!!
-  final String _serviceExecutable =
-      'C:\\Users\\emre.oeztas\\Desktop\\ICARASdk\\bin\\Release\\net8.0-windows\\ICARASdk.exe';
-
   Process? _csharpProcess;
 
   Completer<IcaraSdkMessageResponse>? _sdkResponseCompleter;
 
-  init() async {
-    // if (!_isSdkStarted) {
-    //   _csharpProcess = await Process.start(_serviceExecutable, []);
-    //   _csharpProcess?.stdout.listen(_onDataReceived);
-    //   debugPrint('Initiated Csharp process');
-    //   _isSdkStarted = true;
-    // }
+  init(BuildContext context) async {
+    if (!_isSdkStarted) {
+      try {
+        String? _serviceExecutable = await Preferences.getSdkLocation();
+        if (_serviceExecutable == null || _serviceExecutable.isEmpty) {
+          _serviceExecutable = await _pickSdkFile();
+          await Preferences.setSdkLocation(_serviceExecutable);
+        }
+        _csharpProcess = await Process.start(_serviceExecutable ?? "", []);
+        _csharpProcess?.stdout.listen(_onDataReceived);
+        debugPrint('Initiated Csharp process');
+        _isSdkStarted = true;
+      } on Exception catch (e) {
+        _logger.e(e);
+        SnackbarHolder.showSnackbar(
+          "An error happened while starting the sdk",
+          true,
+          context,
+        );
+      }
+    }
+  }
+
+  Future<String?> _pickSdkFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      dialogTitle: "Please select the ICARA Sdk",
+      type: FileType.custom,
+      allowedExtensions: ['exe'],
+    );
+    if (result != null) {
+      return result.paths.first;
+    }
+    return null;
   }
 
   dynamic _onDataReceived(event) {
@@ -73,6 +98,4 @@ class IcarasdkViewModel extends ChangeNotifier {
     _csharpProcess?.stdin.write(messagePayload);
     return _sdkResponseCompleter!.future;
   }
-
-  //Future
 }

@@ -13,7 +13,7 @@ class _HomePageState extends State<StatefulWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      await context.read<IcarasdkViewModel>().init();
+      await context.read<IcarasdkViewModel>().init(context);
     });
     super.initState();
   }
