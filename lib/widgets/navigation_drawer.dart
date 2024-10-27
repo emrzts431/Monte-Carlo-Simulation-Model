@@ -2,8 +2,15 @@ import 'package:ICARA/pages/capital_modeling.dart';
 import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/pages/raroc.dart';
 import 'package:ICARA/pages/insurance_pricing.dart';
-import 'package:ICARA/pages/settings.dart';
+//import 'package:ICARA/pages/settings.dart';
 import 'package:flutter/material.dart';
+
+import 'package:ICARA/dialogs/bucket_names_dialog.dart';
+import 'package:ICARA/dialogs/bucket_1_categories_dialog.dart';
+import 'package:ICARA/dialogs/bucket_2_categories_dialog.dart';
+import 'package:ICARA/dialogs/degrees_of_freedom_dialog.dart';
+import 'package:ICARA/dialogs/global_correlation_dialog.dart';
+import 'package:ICARA/dialogs/model_assumption_dialog.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({super.key});
@@ -82,20 +89,122 @@ class CustomNavigationDrawer extends StatelessWidget {
             },
           ),
           const Divider(
-            thickness: 2,
-            indent: 5,
-            endIndent: 5,
+            thickness: 1,
+            indent: 15,
+            endIndent: 15,
+            color: Colors.grey,
           ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Settings()),
-              );
-            },
-          ),
+          //ListTile(
+          //  leading: const Icon(Icons.settings),
+          //  title: const Text('Settings'),
+          //  onTap: () {
+          //    Navigator.push(
+          //      context,
+          //      MaterialPageRoute(builder: (context) => Settings()),
+          //    );
+          //  },
+          //),
+          ExpansionTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              children: <Widget>[
+                ListTile(
+                  title: const Text("Bucket Names"),
+                  leading: Image.asset(
+                    'assets/icons/manageBucketSettings.png',
+                    scale: 10,
+                    width: 20,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const BucketNamesDialog();
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text("Bucket 1 Categories"),
+                  leading: Image.asset(
+                    'assets/icons/Sand_bucket.png',
+                    scale: 10,
+                    width: 18,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const Bucket1CategoriesDialog();
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text("Bucket 2 Categories"),
+                  leading: Image.asset(
+                    'assets/icons/Sand_bucket.png',
+                    scale: 10,
+                    width: 20,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const Bucket2CategoriesDialog();
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text("Global Corellation"),
+                  leading: Image.asset(
+                    'assets/icons/global_correlation.png',
+                    scale: 10,
+                    width: 20,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const GlobalCorrelationDialog();
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text("Degrees of Freedom"),
+                  leading: Image.asset(
+                    'assets/icons/degrees_of_freedom.png',
+                    scale: 10,
+                    width: 20,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const DegreesOfFreedomDialog();
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text("Model Assumptions"),
+                  leading: Image.asset(
+                    'assets/icons/model_assumption.png',
+                    scale: 10,
+                    width: 20,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const ModelAssumptionDialog();
+                      },
+                    );
+                  },
+                ),
+              ]),
           ListTile(
             leading: const Icon(Icons.question_mark_rounded),
             title: const Text('Help'),

@@ -16,8 +16,9 @@ class Settings extends StatelessWidget {
           ListTile(
             title: const Text("Bucket Names"),
             leading: Image.asset(
-              'assets/icons/manage bucket setting.png',
+              'assets/icons/manageBucketSettings.png',
               scale: 10,
+              width: 36,
             ),
             onTap: () {
               showDialog(
@@ -79,12 +80,11 @@ class Settings extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
-              "Bucket 1 Categories",
-            ),
+            title: const Text("Bucket 1 Categories"),
             leading: Image.asset(
               'assets/icons/Sand_bucket.png',
               scale: 10,
+              width: 32,
             ),
             onTap: () {
               String selectedChoice = 'Use default';
@@ -150,7 +150,7 @@ class Settings extends StatelessWidget {
                                 height: 10,
                               ),
                               TextField(
-                                maxLines: 8,
+                                maxLines: 7,
                                 readOnly: selectedChoice != 'Use own values',
                                 decoration: InputDecoration(
                                   border: const OutlineInputBorder(),
@@ -178,8 +178,11 @@ class Settings extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
-              "Bucket 2 Categories",
+            title: const Text("Bucket 2 Categories"),
+            leading: Image.asset(
+              'assets/icons/Sand_bucket.png',
+              scale: 10,
+              width: 32,
             ),
             onTap: () {
               String selectedChoice = 'Use default';
@@ -245,7 +248,7 @@ class Settings extends StatelessWidget {
                                 height: 10,
                               ),
                               TextField(
-                                maxLines: 8,
+                                maxLines: 7,
                                 readOnly: selectedChoice != 'Use own values',
                                 decoration: InputDecoration(
                                   border: const OutlineInputBorder(),
@@ -273,8 +276,11 @@ class Settings extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
-              "Global Corellation",
+            title: const Text("Global Corellation"),
+            leading: Image.asset(
+              'assets/icons/global_correlation.png',
+              scale: 10,
+              width: 32,
             ),
             onTap: () {
               showDialog(
@@ -327,8 +333,11 @@ class Settings extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
-              "Degrees of Freedom",
+            title: const Text("Degrees of Freedom"),
+            leading: Image.asset(
+              'assets/icons/degrees_of_freedom.png',
+              scale: 10,
+              width: 32,
             ),
             onTap: () {
               showDialog(
@@ -382,6 +391,11 @@ class Settings extends StatelessWidget {
           ),
           ListTile(
             title: const Text("Model Assumptions"),
+            leading: Image.asset(
+              'assets/icons/model_assumption.png',
+              scale: 10,
+              width: 32,
+            ),
             onTap: () {
               String? dropdownValue = 'Item 1';
 
