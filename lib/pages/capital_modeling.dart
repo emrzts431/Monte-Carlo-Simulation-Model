@@ -1,20 +1,20 @@
-import 'dart:io';
-import 'dart:typed_data';
+// import 'dart:io';
+// import 'dart:typed_data';
 
 // import 'package:ICARA/pages/risk_inputs.dart';
 // import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/contents/pick_risks_content.dart';
-import 'package:ICARA/services/navigation_service.dart';
-import 'package:ICARA/services/service_locator.dart';
-import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+// import 'package:ICARA/services/navigation_service.dart';
+// import 'package:ICARA/services/service_locator.dart';
+// import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
-import 'package:ICARA/widgets/snackbar_holder.dart';
-import 'package:excel/excel.dart';
-import 'package:file_picker/file_picker.dart';
+// import 'package:ICARA/widgets/snackbar_holder.dart';
+// import 'package:excel/excel.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
+// import 'package:logger/logger.dart';
+// import 'package:provider/provider.dart';
 
 class CapitalModeling extends StatefulWidget {
   const CapitalModeling({super.key});
@@ -27,9 +27,6 @@ class CapitalModeling extends StatefulWidget {
 
 class _CapitalModelingState extends State<CapitalModeling> {
   int _currentIndex = 0; // Variable to track the selected content
-  final _logger = Logger(
-    printer: PrettyPrinter(methodCount: 1),
-  );
 
   @override
   Widget build(BuildContext context) {

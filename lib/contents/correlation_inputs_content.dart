@@ -12,6 +12,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class CorrelationInputsContent extends StatefulWidget {
+  const CorrelationInputsContent({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return CorrelationInputsContentState();
@@ -25,12 +27,101 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
   List<List<dynamic>> _rows = []; // Store the Excel rows
   List<String> _columnNames = []; // Column names
   final _scrollController = ScrollController();
+  String choiceChipValue = 'Use A Single Correlation';
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Center(
       child: Column(
         children: [
+          Column(
+            children: [
+              ChoiceChip(
+                padding: const EdgeInsets.all(10),
+                backgroundColor: Colors.grey[200],
+                label: const Text(
+                  'Use A Single Correlation',
+                ),
+                selected: choiceChipValue == 'Use A Single Correlation',
+                onSelected: (bool value) {
+                  setState(() {
+                    if (value == true) {
+                      choiceChipValue = 'Use A Single Correlation';
+                    } else {
+                      choiceChipValue = 'test1 test1 test1 test1';
+                    }
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ChoiceChip(
+                    backgroundColor:
+                        choiceChipValue == 'Use A Single Correlation'
+                            ? Colors.grey[300]
+                            : Colors.grey[200],
+                    label: const Text('test1 test1 test1 test1'),
+                    selected: choiceChipValue == 'test1 test1 test1 test1',
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (choiceChipValue == 'Use A Single Correlation') {
+                          return;
+                        }
+
+                        if (value == true) {
+                          choiceChipValue = 'test1 test1 test1 test1';
+                        }
+                      });
+                    },
+                  ),
+                  ChoiceChip(
+                    backgroundColor:
+                        choiceChipValue == 'Use A Single Correlation'
+                            ? Colors.grey[300]
+                            : Colors.grey[200],
+                    label: const Text('test2 test2 test2 test2'),
+                    selected: choiceChipValue == 'test2 test2 test2 test2',
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (choiceChipValue == 'Use A Single Correlation') {
+                          return;
+                        }
+
+                        if (value == true) {
+                          choiceChipValue = 'test2 test2 test2 test2';
+                        }
+                      });
+                    },
+                  ),
+                  ChoiceChip(
+                    backgroundColor:
+                        choiceChipValue == 'Use A Single Correlation'
+                            ? Colors.grey[300]
+                            : Colors.grey[200],
+                    label: const Text('test3 test3 test3 test3 test3 test3'),
+                    selected: choiceChipValue ==
+                        'test3 test3 test3 test3 test3 test3',
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (choiceChipValue == 'Use A Single Correlation') {
+                          return;
+                        }
+
+                        if (value == true) {
+                          choiceChipValue =
+                              'test3 test3 test3 test3 test3 test3';
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -198,16 +289,16 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
   }
 
   Future _saveRisks() async {
-    final List<String> _cellValues = [];
+    final List<String> cellValues = [];
     for (var row in _rows) {
       for (var cell in row) {
-        _cellValues.add(cell.toString());
+        cellValues.add(cell.toString());
       }
     }
 
-    final result = await context
+    await context
         .read<IcarasdkViewModel>()
-        .callMethod('SaveRiskInputs', [_cellValues]).then((value) {
+        .callMethod('SaveRiskInputs', [cellValues]).then((value) {
       _logger.d(value.toJson());
       if (value.result == "Success") {
         SnackbarHolder.showSnackbar(

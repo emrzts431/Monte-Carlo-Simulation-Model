@@ -12,6 +12,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class PickRisksContent extends StatefulWidget {
+  const PickRisksContent({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return PickRisksContentState();
@@ -27,7 +29,6 @@ class PickRisksContentState extends State<PickRisksContent> {
   final _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Center(
       child: Column(
         children: [
@@ -202,16 +203,16 @@ class PickRisksContentState extends State<PickRisksContent> {
   }
 
   Future _saveRisks() async {
-    final List<String> _cellValues = [];
+    final List<String> cellValues = [];
     for (var row in _rows) {
       for (var cell in row) {
-        _cellValues.add(cell.toString());
+        cellValues.add(cell.toString());
       }
     }
 
-    final result = await context
+    await context
         .read<IcarasdkViewModel>()
-        .callMethod('SaveRiskInputs', [_cellValues]).then((value) {
+        .callMethod('SaveRiskInputs', [cellValues]).then((value) {
       _logger.d(value.toJson());
       if (value.result == "Success") {
         SnackbarHolder.showSnackbar(
