@@ -197,33 +197,141 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                     child: ListView(
                       controller: _scrollController,
                       children: [
-                        DataTable(
-                          columns: _rows.isNotEmpty
-                              ? List.generate(
-                                  _rows[0].length,
-                                  (index) => DataColumn(
-                                    label: Text(
-                                      _columnNames[index],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                )
-                              : [],
-                          rows: _rows.isNotEmpty
-                              ? List.generate(
-                                  _rows.length,
-                                  (index) => DataRow(
-                                    cells: List.generate(
-                                      _rows[index].length,
-                                      (cellIndex) => DataCell(
-                                        Text(
-                                            _rows[index][cellIndex].toString()),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Table(
+                              border: TableBorder.all(
+                                  color: Colors.black, width: 1),
+                              columnWidths: {
+                                for (var index = 0;
+                                    index < _columnNames.length;
+                                    index++)
+                                  index: const IntrinsicColumnWidth()
+                              },
+                              children: [
+                                TableRow(
+                                  children: _columnNames.map((columnName) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        columnName,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
                                       ),
-                                    ),
-                                  ),
-                                )
-                              : [],
+                                    );
+                                  }).toList(),
+                                ),
+                                ..._rows.asMap().entries.map((entry) {
+                                  int rowIndex = entry.key;
+                                  List<dynamic> row = entry.value;
+
+                                  return TableRow(
+                                    children:
+                                        row.asMap().entries.map((cellEntry) {
+                                      int cellIndex = cellEntry.key;
+                                      String cellContent =
+                                          cellEntry.value.toString();
+
+                                      if (_columnNames[cellIndex] ==
+                                              'K-Factors' ||
+                                          _columnNames[cellIndex] ==
+                                              'Loss Types') {
+                                        List<String> dropdownItems = [];
+
+                                        if (_columnNames[cellIndex] ==
+                                            'K-Factors') {
+                                          dropdownItems = [
+                                            'K-AUM',
+                                            'K-CMH',
+                                            'K-Other'
+                                          ];
+                                        } else if (_columnNames[cellIndex] ==
+                                            'Loss Types') {
+                                          dropdownItems = [
+                                            'EDPM',
+                                            'BDSF',
+                                            'CPBP',
+                                            'EF',
+                                            'IF',
+                                            'EPWS',
+                                            'DPA'
+                                          ];
+                                        }
+
+                                        String? dropdownValue =
+                                            dropdownItems.contains(cellContent)
+                                                ? cellContent
+                                                : null;
+
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 150,
+                                            ),
+                                            child:
+                                                DropdownButtonFormField<String>(
+                                              focusColor: Colors.white,
+                                              value: dropdownValue,
+                                              items: dropdownItems
+                                                  .map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  _rows[rowIndex][cellIndex] =
+                                                      newValue;
+                                                });
+                                              },
+                                              decoration: const InputDecoration(
+                                                isDense: true,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 8.0),
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 150,
+                                            ),
+                                            child: TextFormField(
+                                              initialValue: cellContent,
+                                              textAlign: TextAlign.center,
+                                              decoration: const InputDecoration(
+                                                isDense: true,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 8.0),
+                                                border: InputBorder.none,
+                                              ),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  _rows[rowIndex][cellIndex] =
+                                                      newValue;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }).toList(),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           height: 50,
