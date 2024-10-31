@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ICARA/data/preferences.dart';
 import 'package:ICARA/services/navigation_service.dart';
 import 'package:ICARA/services/service_locator.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
@@ -26,12 +27,26 @@ class PickRisksContentState extends State<PickRisksContent> {
   );
   List<List<dynamic>> _rows = [];
   List<String> _columnNames = [];
+  List<String> _kfactors = [];
+  List<String> _lossTypes = [];
   final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+      _kfactors = await Preferences.getBucketCategories(
+          Preferences.BUCKET_1_CATEGORIES);
+      _lossTypes = await Preferences.getBucketCategories(
+          Preferences.BUCKET_2_CATEGORIES);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,88 +115,74 @@ class PickRisksContentState extends State<PickRisksContent> {
             ],
           ),
           const SizedBox(
-            height: 15,
+            height: 50,
           ),
-          Expanded(
-            child: _rows.isEmpty
-                ? const Center(child: Text('No Data Loaded'))
-                : Scrollbar(
-                    controller: _scrollController,
-                    thumbVisibility: true,
-                    thickness: 3,
-                    child: ListView(
-                      controller: _scrollController,
-                      children: [
-                        SingleChildScrollView(
+          _rows.isEmpty
+              ? const Center(child: Text('No Data Loaded'))
+              : Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        thickness: 10,
+                        controller: _scrollController,
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
                           scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Table(
-                              border: TableBorder.all(
-                                  color: Colors.black, width: 1),
-                              columnWidths: {
-                                for (var index = 0;
-                                    index < _columnNames.length;
-                                    index++)
-                                  index: const IntrinsicColumnWidth()
-                              },
-                              children: [
-                                TableRow(
-                                  children: _columnNames.map((columnName) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        columnName,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                ..._rows.asMap().entries.map((entry) {
-                                  int rowIndex = entry.key;
-                                  List<dynamic> row = entry.value;
+                          child: DataTable(
+                            border:
+                                TableBorder.all(color: Colors.black, width: 1),
+                            // columnWidths: {
+                            //   for (var index = 0;
+                            //       index < _columnNames.length;
+                            //       index++)
+                            //     index: const IntrinsicColumnWidth()
+                            // },
+                            columns: _columnNames
+                                .map(
+                                  (c) => DataColumn(
+                                    label: Text(
+                                      c,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            rows: [
+                              ..._rows.asMap().entries.map((entry) {
+                                int rowIndex = entry.key;
+                                List<dynamic> row = entry.value;
 
-                                  return TableRow(
-                                    children:
-                                        row.asMap().entries.map((cellEntry) {
-                                      int cellIndex = cellEntry.key;
-                                      String cellContent =
-                                          cellEntry.value.toString();
+                                return DataRow(
+                                  cells: row.asMap().entries.map((cellEntry) {
+                                    int cellIndex = cellEntry.key;
+                                    String cellContent =
+                                        cellEntry.value.toString();
+
+                                    if (_columnNames[cellIndex] ==
+                                            'K-Factors' ||
+                                        _columnNames[cellIndex] ==
+                                            'Loss Types') {
+                                      List<String> dropdownItems = [];
 
                                       if (_columnNames[cellIndex] ==
-                                              'K-Factors' ||
-                                          _columnNames[cellIndex] ==
-                                              'Loss Types') {
-                                        List<String> dropdownItems = [];
+                                          'K-Factors') {
+                                        dropdownItems = _kfactors;
+                                      } else if (_columnNames[cellIndex] ==
+                                          'Loss Types') {
+                                        dropdownItems = _lossTypes;
+                                      }
 
-                                        if (_columnNames[cellIndex] ==
-                                            'K-Factors') {
-                                          dropdownItems = [
-                                            'K-AUM',
-                                            'K-CMH',
-                                            'K-Other'
-                                          ];
-                                        } else if (_columnNames[cellIndex] ==
-                                            'Loss Types') {
-                                          dropdownItems = [
-                                            'EDPM',
-                                            'BDSF',
-                                            'CPBP',
-                                            'EF',
-                                            'IF',
-                                            'EPWS',
-                                            'DPA'
-                                          ];
-                                        }
+                                      String? dropdownValue =
+                                          dropdownItems.contains(cellContent)
+                                              ? cellContent
+                                              : null;
 
-                                        String? dropdownValue =
-                                            dropdownItems.contains(cellContent)
-                                                ? cellContent
-                                                : null;
-
-                                        return Padding(
+                                      return DataCell(
+                                        Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
                                             constraints: const BoxConstraints(
@@ -213,9 +214,11 @@ class PickRisksContentState extends State<PickRisksContent> {
                                               ),
                                             ),
                                           ),
-                                        );
-                                      } else {
-                                        return Padding(
+                                        ),
+                                      );
+                                    } else {
+                                      return DataCell(
+                                        Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
                                             constraints: const BoxConstraints(
@@ -239,22 +242,19 @@ class PickRisksContentState extends State<PickRisksContent> {
                                               },
                                             ),
                                           ),
-                                        );
-                                      }
-                                    }).toList(),
-                                  );
-                                }),
-                              ],
-                            ),
+                                        ),
+                                      );
+                                    }
+                                  }).toList(),
+                                );
+                              }),
+                            ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-          ),
+                ),
         ],
       ),
     );
@@ -289,9 +289,11 @@ class PickRisksContentState extends State<PickRisksContent> {
         for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
           List<dynamic> customRow = [];
           for (var cell in excel.tables[table]!.rows[i]) {
-            cell != null ? customRow.add(cell.value) : debugPrint("Null Value");
+            cell != null && cell.value != null
+                ? customRow.add(cell.value)
+                : debugPrint("Null Value");
           }
-          if (!customRow.contains(null)) {
+          if (customRow.isNotEmpty && !customRow.contains(null)) {
             customRow.insert(0, "Risk $i");
             rows.add(customRow);
           }
@@ -312,30 +314,16 @@ class PickRisksContentState extends State<PickRisksContent> {
   }
 
   Future _saveRisks() async {
-    final List<dynamic> cellValues = [];
+    final List<String> cellValues = [];
     for (var row in _rows) {
       for (var cell in row) {
         cellValues.add(cell.toString());
       }
     }
 
-    await context
-        .read<IcarasdkViewModel>()
-        .callMethod('SaveRiskInputs', [cellValues]).then((value) {
-      _logger.d(value.toJson());
-      if (value.result == "Success") {
-        SnackbarHolder.showSnackbar(
-          "Risk inputs saved successfully",
-          false,
-          locator<NavigationService>().navigatorKey.currentContext ?? context,
+    await context.read<IcarasdkViewModel>().saveRiskInputs(
+          context,
+          cellValues,
         );
-      } else {
-        SnackbarHolder.showSnackbar(
-          "Risk inputs couldn't be saved:${value.result}",
-          true,
-          locator<NavigationService>().navigatorKey.currentContext ?? context,
-        );
-      }
-    });
   }
 }

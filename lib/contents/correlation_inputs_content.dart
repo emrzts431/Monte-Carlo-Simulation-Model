@@ -25,31 +25,38 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
     printer: PrettyPrinter(methodCount: 1),
   );
   List<List<dynamic>> _rows = []; // Store the Excel rows
-  List<String> _columnNames = []; // Column names
+  List<String?> _columnNames = []; // Column names
   final _scrollController = ScrollController();
-  String choiceChipValue = 'Use A Single Correlation';
+  int choiceChipValue = 0;
+  List<String> correlationStyles = [
+    "Use A Single Correlation",
+    "Correlation between Inputs",
+    "Correlation Between Likelihoods",
+    "Correlation between Likelihoods and Inputs"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChoiceChip(
                 padding: const EdgeInsets.all(10),
                 backgroundColor: Colors.grey[200],
-                label: const Text(
-                  'Use A Single Correlation',
+                label: Text(
+                  correlationStyles[0],
                 ),
-                selected: choiceChipValue == 'Use A Single Correlation',
+                selected: choiceChipValue == 0,
                 onSelected: (bool value) {
                   setState(() {
-                    if (value == true) {
-                      choiceChipValue = 'Use A Single Correlation';
-                    } else {
-                      choiceChipValue = 'test1 test1 test1 test1';
-                    }
+                    choiceChipValue = 0;
                   });
                 },
               ),
@@ -57,64 +64,42 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                 height: 4,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ChoiceChip(
-                    backgroundColor:
-                        choiceChipValue == 'Use A Single Correlation'
-                            ? Colors.grey[300]
-                            : Colors.grey[200],
-                    label: const Text('test1 test1 test1 test1'),
-                    selected: choiceChipValue == 'test1 test1 test1 test1',
+                    backgroundColor: choiceChipValue == 0
+                        ? Colors.grey[300]
+                        : Colors.grey[200],
+                    label: Text(correlationStyles[1]),
+                    selected: choiceChipValue == 1,
                     onSelected: (bool value) {
                       setState(() {
-                        if (choiceChipValue == 'Use A Single Correlation') {
-                          return;
-                        }
-
-                        if (value == true) {
-                          choiceChipValue = 'test1 test1 test1 test1';
-                        }
+                        choiceChipValue = 1;
                       });
                     },
                   ),
                   ChoiceChip(
-                    backgroundColor:
-                        choiceChipValue == 'Use A Single Correlation'
-                            ? Colors.grey[300]
-                            : Colors.grey[200],
-                    label: const Text('test2 test2 test2 test2'),
-                    selected: choiceChipValue == 'test2 test2 test2 test2',
+                    backgroundColor: choiceChipValue == 0
+                        ? Colors.grey[300]
+                        : Colors.grey[200],
+                    label: Text(correlationStyles[2]),
+                    selected: choiceChipValue == 2,
                     onSelected: (bool value) {
                       setState(() {
-                        if (choiceChipValue == 'Use A Single Correlation') {
-                          return;
-                        }
-
-                        if (value == true) {
-                          choiceChipValue = 'test2 test2 test2 test2';
-                        }
+                        choiceChipValue = 2;
                       });
                     },
                   ),
                   ChoiceChip(
-                    backgroundColor:
-                        choiceChipValue == 'Use A Single Correlation'
-                            ? Colors.grey[300]
-                            : Colors.grey[200],
-                    label: const Text('test3 test3 test3 test3 test3 test3'),
-                    selected: choiceChipValue ==
-                        'test3 test3 test3 test3 test3 test3',
+                    backgroundColor: choiceChipValue == 0
+                        ? Colors.grey[300]
+                        : Colors.grey[200],
+                    label: Text(correlationStyles[3]),
+                    selected: choiceChipValue == 3,
                     onSelected: (bool value) {
                       setState(() {
-                        if (choiceChipValue == 'Use A Single Correlation') {
-                          return;
-                        }
-
-                        if (value == true) {
-                          choiceChipValue =
-                              'test3 test3 test3 test3 test3 test3';
-                        }
+                        choiceChipValue = 3;
                       });
                     },
                   ),
@@ -148,7 +133,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
               Container(
                 margin: const EdgeInsets.only(top: 16),
                 child: ElevatedButton(
-                  onPressed: _clearRisks,
+                  onPressed: _clearCorrelations,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shadowColor: Colors.transparent,
@@ -168,7 +153,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
               Container(
                 margin: const EdgeInsets.only(top: 16),
                 child: ElevatedButton(
-                  onPressed: _saveRisks,
+                  onPressed: _saveCorrelations,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shadowColor: Colors.transparent,
@@ -185,167 +170,87 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
             ],
           ),
           const SizedBox(
-            height: 15,
+            height: 50,
           ),
-          Expanded(
-            child: _rows.isEmpty
-                ? const Center(child: Text('No Data Loaded'))
-                : Scrollbar(
-                    controller: _scrollController,
-                    thumbVisibility: true,
-                    thickness: 3,
-                    child: ListView(
+          _rows.isEmpty
+              ? const Center(child: Text('No Data Loaded'))
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      thickness: 10,
                       controller: _scrollController,
-                      children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Table(
-                              border: TableBorder.all(
-                                  color: Colors.black, width: 1),
-                              columnWidths: {
-                                for (var index = 0;
-                                    index < _columnNames.length;
-                                    index++)
-                                  index: const IntrinsicColumnWidth()
-                              },
-                              children: [
-                                TableRow(
-                                  children: _columnNames.map((columnName) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        columnName,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
-                                  }).toList(),
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columns: _columnNames
+                              .map(
+                                (c) => DataColumn(
+                                  label: Text(
+                                    c ?? '',
+                                  ),
                                 ),
-                                ..._rows.asMap().entries.map((entry) {
-                                  int rowIndex = entry.key;
-                                  List<dynamic> row = entry.value;
+                              )
+                              .toList(),
+                          border:
+                              TableBorder.all(color: Colors.black, width: 1),
+                          rows: [
+                            ..._rows.asMap().entries.map((entry) {
+                              int rowIndex = entry.key;
+                              List<dynamic> row = entry.value;
 
-                                  return TableRow(
-                                    children:
-                                        row.asMap().entries.map((cellEntry) {
-                                      int cellIndex = cellEntry.key;
-                                      String cellContent =
-                                          cellEntry.value.toString();
+                              return DataRow(
+                                cells: row.asMap().entries.map((cellEntry) {
+                                  int cellIndex = cellEntry.key;
+                                  String cellContent =
+                                      cellEntry.value.toString();
 
-                                      if (_columnNames[cellIndex] ==
-                                              'K-Factors' ||
-                                          _columnNames[cellIndex] ==
-                                              'Loss Types') {
-                                        List<String> dropdownItems = [];
-
-                                        if (_columnNames[cellIndex] ==
-                                            'K-Factors') {
-                                          dropdownItems = [
-                                            'K-AUM',
-                                            'K-CMH',
-                                            'K-Other'
-                                          ];
-                                        } else if (_columnNames[cellIndex] ==
-                                            'Loss Types') {
-                                          dropdownItems = [
-                                            'EDPM',
-                                            'BDSF',
-                                            'CPBP',
-                                            'EF',
-                                            'IF',
-                                            'EPWS',
-                                            'DPA'
-                                          ];
-                                        }
-
-                                        String? dropdownValue =
-                                            dropdownItems.contains(cellContent)
-                                                ? cellContent
-                                                : null;
-
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            constraints: const BoxConstraints(
-                                              maxWidth: 150,
-                                            ),
-                                            child:
-                                                DropdownButtonFormField<String>(
-                                              focusColor: Colors.white,
-                                              value: dropdownValue,
-                                              items: dropdownItems
-                                                  .map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  _rows[rowIndex][cellIndex] =
-                                                      newValue;
-                                                });
-                                              },
-                                              decoration: const InputDecoration(
-                                                isDense: true,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        vertical: 8.0),
-                                                border: InputBorder.none,
-                                              ),
-                                            ),
+                                  return DataCell(
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 150,
+                                        ),
+                                        child: TextFormField(
+                                          initialValue: cellContent,
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                            isDense: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 8.0),
+                                            border: InputBorder.none,
                                           ),
-                                        );
-                                      } else {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            constraints: const BoxConstraints(
-                                              maxWidth: 150,
-                                            ),
-                                            child: TextFormField(
-                                              initialValue: cellContent,
-                                              textAlign: TextAlign.center,
-                                              decoration: const InputDecoration(
-                                                isDense: true,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        vertical: 8.0),
-                                                border: InputBorder.none,
-                                              ),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  _rows[rowIndex][cellIndex] =
-                                                      newValue;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }).toList(),
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              _rows[rowIndex][cellIndex] =
+                                                  newValue;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   );
-                                }),
-                              ],
-                            ),
-                          ),
+                                }).toList(),
+                              );
+                            }),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-          ),
+                ),
         ],
       ),
     );
   }
 
-  // Method to pick and read an Excel file
   Future<void> _pickExcelFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -361,42 +266,47 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
   void _readExcel(Uint8List fileBytes) {
     var excel = Excel.decodeBytes(fileBytes);
     List<List<dynamic>> rows = [];
+    String table = 'Sheet1';
+    //for (var table in excel.tables.keys) {
+    // print(table); // Sheet name
+    // print(excel.tables[table]?.maxColumns);
+    // print(excel.tables[table]?.maxRows);
 
-    for (var table in excel.tables.keys) {
-      // print(table); // Sheet name
-      // print(excel.tables[table]?.maxColumns);
-      // print(excel.tables[table]?.maxRows);
-      if (excel.tables[table]?.maxColumns != 0) {
-        _columnNames = excel.tables[table]!.rows[0]
-            .map((d) => d!.value.toString())
-            .toList();
-        _columnNames.insert(0, "Risk No");
-        for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
-          List<dynamic> customRow = [];
-          for (var cell in excel.tables[table]!.rows[i]) {
-            cell != null ? customRow.add(cell.value) : debugPrint("Null Value");
-          }
-          if (!customRow.contains(null)) {
-            customRow.insert(0, "Risk $i");
-            rows.add(customRow);
-          }
+    if (excel.tables[table]?.maxColumns != 0) {
+      for (var data in excel.tables[table]!.rows[0].toList()) {
+        if (data != null && data.value != null) {
+          _columnNames.add(data.value.toString());
+        }
+      }
+      _columnNames.insert(0, "Risk No");
+      for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
+        List<dynamic> customRow = [];
+        for (var cell in excel.tables[table]!.rows[i]) {
+          cell != null && cell.value != null
+              ? customRow.add(cell.value)
+              : debugPrint("Null Value");
+        }
+        if (customRow.isNotEmpty && !customRow.contains(null)) {
+          customRow.insert(0, "Risk $i");
+          rows.add(customRow);
         }
       }
     }
+    //}
 
     setState(() {
       _rows = rows;
     });
   }
 
-  void _clearRisks() {
+  void _clearCorrelations() {
     setState(() {
       _columnNames = [];
       _rows = [];
     });
   }
 
-  Future _saveRisks() async {
+  Future _saveCorrelations() async {
     final List<String> cellValues = [];
     for (var row in _rows) {
       for (var cell in row) {
@@ -404,23 +314,9 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
       }
     }
 
+    //TODO: Implement Correlation inputs from the sdk
     await context
         .read<IcarasdkViewModel>()
-        .callMethod('SaveRiskInputs', [cellValues]).then((value) {
-      _logger.d(value.toJson());
-      if (value.result == "Success") {
-        SnackbarHolder.showSnackbar(
-          "Risk inputs saved successfully",
-          false,
-          locator<NavigationService>().navigatorKey.currentContext ?? context,
-        );
-      } else {
-        SnackbarHolder.showSnackbar(
-          "Risk inputs couldn't be saved:${value.result}",
-          true,
-          locator<NavigationService>().navigatorKey.currentContext ?? context,
-        );
-      }
-    });
+        .saveCorrelationInputs(context, cellValues);
   }
 }

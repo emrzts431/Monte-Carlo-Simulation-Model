@@ -1,3 +1,8 @@
+import 'package:ICARA/data/app_logger.dart';
+import 'package:ICARA/data/preferences.dart';
+import 'package:ICARA/services/navigation_service.dart';
+import 'package:ICARA/services/service_locator.dart';
+import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 
 class ModelAssumptionDialog extends StatefulWidget {
@@ -8,7 +13,23 @@ class ModelAssumptionDialog extends StatefulWidget {
 }
 
 class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
-  String? dropdownValue = 'Item 1';
+  final _defWCaseController = TextEditingController();
+  final _defTCaseController = TextEditingController();
+
+  String? dropdownValue = 'LogNormal';
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+      final modelAssumptions = await Preferences.getModelAssumptions();
+      _defTCaseController.text =
+          (modelAssumptions['typicalCase'] as double).toString();
+      _defWCaseController.text =
+          (modelAssumptions['worstCase'] as double).toString();
+      dropdownValue = modelAssumptions['sevModel'];
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,23 +55,25 @@ class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const TextField(
+            TextField(
+              controller: _defWCaseController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(),
-                labelText: 'Textfield 1',
+                labelText: 'Def. of Worst Case',
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            const TextField(
+            TextField(
+              controller: _defTCaseController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(),
-                labelText: 'Textfield 2',
+                labelText: 'Def. of Typical Case',
               ),
             ),
             const SizedBox(
@@ -70,8 +93,7 @@ class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
                     isExpanded: true,
                     value: dropdownValue,
                     padding: const EdgeInsets.only(left: 12, right: 12),
-                    items: <String>['Item 1', 'Item 2', 'Item 3']
-                        .map((String value) {
+                    items: <String>['LogNormal'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -91,8 +113,29 @@ class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async {
+            try {
+              await Preferences.setModelAssumptions(
+                double.parse(_defWCaseController.text),
+                double.parse(_defTCaseController.text),
+                dropdownValue ?? 'LogNormal',
+              ).then((value) {
+                SnackbarHolder.showSnackbar(
+                  'Successfully updated model assumptions',
+                  false,
+                  locator<NavigationService>().navigatorKey.currentContext ??
+                      context,
+                );
+              });
+            } on Exception catch (error, stackTrace) {
+              AppLogger.instance.error(error, stackTrace);
+              SnackbarHolder.showSnackbar(
+                'An error occured while updating model assumptions',
+                true,
+                locator<NavigationService>().navigatorKey.currentContext ??
+                    context,
+              );
+            }
           },
           child: const Text('Save'),
         ),
