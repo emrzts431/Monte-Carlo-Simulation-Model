@@ -25,26 +25,26 @@ class IcarasdkViewModel extends ChangeNotifier {
   Completer<IcaraSdkMessageResponse>? _sdkResponseCompleter;
 
   init(BuildContext context) async {
-    if (!_isSdkStarted) {
-      try {
-        String? _serviceExecutable = await Preferences.getSdkLocation();
-        if (_serviceExecutable == null || _serviceExecutable.isEmpty) {
-          _serviceExecutable = await _pickSdkFile();
-          await Preferences.setSdkLocation(_serviceExecutable);
-        }
-        _csharpProcess = await Process.start(_serviceExecutable ?? "", []);
-        _csharpProcess?.stdout.listen(_onDataReceived);
-        debugPrint('Initiated Csharp process');
-        _isSdkStarted = true;
-      } on Exception catch (e, stackTrace) {
-        AppLogger.instance.error(e, stackTrace);
-        SnackbarHolder.showSnackbar(
-          "An error happened while starting the sdk",
-          true,
-          context,
-        );
-      }
-    }
+    // if (!_isSdkStarted) {
+    //   try {
+    //     String? _serviceExecutable = await Preferences.getSdkLocation();
+    //     if (_serviceExecutable == null || _serviceExecutable.isEmpty) {
+    //       _serviceExecutable = await _pickSdkFile();
+    //       await Preferences.setSdkLocation(_serviceExecutable);
+    //     }
+    //     _csharpProcess = await Process.start(_serviceExecutable ?? "", []);
+    //     _csharpProcess?.stdout.listen(_onDataReceived);
+    //     debugPrint('Initiated Csharp process');
+    //     _isSdkStarted = true;
+    //   } on Exception catch (e, stackTrace) {
+    //     AppLogger.instance.error(e, stackTrace);
+    //     SnackbarHolder.showSnackbar(
+    //       "An error happened while starting the sdk",
+    //       true,
+    //       context,
+    //     );
+    //   }
+    // }
   }
 
   Future<String?> _pickSdkFile() async {

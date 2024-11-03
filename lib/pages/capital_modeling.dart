@@ -1,20 +1,11 @@
 // import 'dart:io';
 // import 'dart:typed_data';
 
-// import 'package:ICARA/pages/risk_inputs.dart';
-// import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/contents/pick_risks_content.dart';
-// import 'package:ICARA/services/navigation_service.dart';
-// import 'package:ICARA/services/service_locator.dart';
-// import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+import 'package:ICARA/contents/run_simulation_content.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
-// import 'package:ICARA/widgets/snackbar_holder.dart';
-// import 'package:excel/excel.dart';
-// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-// import 'package:logger/logger.dart';
-// import 'package:provider/provider.dart';
 
 class CapitalModeling extends StatefulWidget {
   const CapitalModeling({super.key});
@@ -142,15 +133,15 @@ class _CapitalModelingState extends State<CapitalModeling> {
   Widget _getContentWidget() {
     switch (_currentIndex) {
       case 0:
-        return PickRisksContent(); // Default Excel Viewer content
+        return const PickRisksContent(); // Default Excel Viewer content
       case 1:
         return const Center(child: Text('Content of Tab 1'));
       case 2:
-        return CorrelationInputsContent();
+        return const CorrelationInputsContent();
       case 3:
-        return const Center(child: Text('Content of Tab 3'));
+        return const RunSimulationContent();
       default:
-        return PickRisksContent();
+        return const PickRisksContent();
     }
   }
 }

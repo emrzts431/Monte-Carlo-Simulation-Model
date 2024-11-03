@@ -2,14 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ICARA/data/preferences.dart';
-import 'package:ICARA/services/navigation_service.dart';
-import 'package:ICARA/services/service_locator.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
-import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class PickRisksContent extends StatefulWidget {
@@ -22,9 +18,9 @@ class PickRisksContent extends StatefulWidget {
 }
 
 class PickRisksContentState extends State<PickRisksContent> {
-  final _logger = Logger(
-    printer: PrettyPrinter(methodCount: 1),
-  );
+  // final _logger = Logger(
+  //   printer: PrettyPrinter(methodCount: 1),
+  // );
   List<List<dynamic>> _rows = [];
   List<String> _columnNames = [];
   List<String> _kfactors = [];
