@@ -39,247 +39,255 @@ class PickRisksContentState extends State<PickRisksContent> {
     super.initState();
   }
 
-  _formatNumber(String value, int rowIndex, int cellIndex) {
+  _formatNumber(String value) {
     if (value.isEmpty) return '';
 
-    final number = int.tryParse(value.replaceAll('.', ''));
-    if (number == null) return '';
+    final number = int.tryParse(value);
+    if (number == null) return value;
 
-    final formattedValue = NumberFormat('#,###').format(number);
+    final formattedValue = NumberFormat('#,###', 'de_DE').format(number);
 
-    return formattedValue.replaceAll('.', ',');
+    return formattedValue;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: _pickExcelFile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shadowColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    side: const BorderSide(color: Colors.black, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Import Excel',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: _clearRisks,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shadowColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    side: const BorderSide(color: Colors.black, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Clear Risks',
-                    style: TextStyle(color: Colors.black),
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: ElevatedButton(
+                    onPressed: _pickExcelFile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      side: const BorderSide(color: Colors.black, width: 2),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Import Excel',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: context.watch<IcarasdkViewModel>().isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ElevatedButton(
-                        onPressed: _saveRisks,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shadowColor: Colors.transparent,
-                          overlayColor: Colors.transparent,
-                          side: const BorderSide(color: Colors.black, width: 2),
-                          elevation: 0,
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: ElevatedButton(
+                    onPressed: _clearRisks,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      side: const BorderSide(color: Colors.black, width: 2),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Clear Risks',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: context.watch<IcarasdkViewModel>().isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ElevatedButton(
+                          onPressed: _saveRisks,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                            side:
+                                const BorderSide(color: Colors.black, width: 2),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Save Risks',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
-                        child: const Text(
-                          'Save Risks',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          _rows.isEmpty
-              ? const Center(child: Text('No Data Loaded'))
-              : Center(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Scrollbar(
-                        thumbVisibility: true,
-                        trackVisibility: true,
-                        thickness: 10,
-                        controller: _scrollController,
-                        child: Center(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              border: TableBorder.all(
-                                  color: Colors.black, width: 1),
-                              // columnWidths: {
-                              //   for (var index = 0;
-                              //       index < _columnNames.length;
-                              //       index++)
-                              //     index: const IntrinsicColumnWidth()
-                              // },
-                              columns: _columnNames
-                                  .map(
-                                    (c) => DataColumn(
-                                      label: Text(
-                                        c,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            _rows.isEmpty
+                ? const Center(child: Text('No Data Loaded'))
+                : Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          thickness: 10,
+                          controller: _scrollController,
+                          child: Center(
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                border: TableBorder.all(
+                                    color: Colors.black, width: 1),
+                                // columnWidths: {
+                                //   for (var index = 0;
+                                //       index < _columnNames.length;
+                                //       index++)
+                                //     index: const IntrinsicColumnWidth()
+                                // },
+                                columns: _columnNames
+                                    .map(
+                                      (c) => DataColumn(
+                                        label: Text(
+                                          c,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                  .toList(),
-                              rows: [
-                                ..._rows.asMap().entries.map((entry) {
-                                  int rowIndex = entry.key;
-                                  List<dynamic> row = entry.value;
+                                    )
+                                    .toList(),
+                                rows: [
+                                  ..._rows.asMap().entries.map((entry) {
+                                    int rowIndex = entry.key;
+                                    List<dynamic> row = entry.value;
 
-                                  return DataRow(
-                                    cells: row.asMap().entries.map((cellEntry) {
-                                      int cellIndex = cellEntry.key;
-                                      String cellContent =
-                                          cellEntry.value.toString();
-
-                                      if (_columnNames[cellIndex] ==
-                                              'K-Factors' ||
-                                          _columnNames[cellIndex] ==
-                                              'Loss Types') {
-                                        List<String> dropdownItems = [];
+                                    return DataRow(
+                                      cells:
+                                          row.asMap().entries.map((cellEntry) {
+                                        int cellIndex = cellEntry.key;
+                                        String cellContent =
+                                            cellEntry.value.toString();
 
                                         if (_columnNames[cellIndex] ==
-                                            'K-Factors') {
-                                          dropdownItems = _kfactors;
-                                        } else if (_columnNames[cellIndex] ==
-                                            'Loss Types') {
-                                          dropdownItems = _lossTypes;
-                                        }
+                                                'K-Factors' ||
+                                            _columnNames[cellIndex] ==
+                                                'Loss Types') {
+                                          List<String> dropdownItems = [];
 
-                                        String? dropdownValue =
-                                            dropdownItems.contains(cellContent)
-                                                ? cellContent
-                                                : null;
+                                          if (_columnNames[cellIndex] ==
+                                              'K-Factors') {
+                                            dropdownItems = _kfactors;
+                                          } else if (_columnNames[cellIndex] ==
+                                              'Loss Types') {
+                                            dropdownItems = _lossTypes;
+                                          }
 
-                                        return DataCell(
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 150,
-                                              ),
-                                              child: DropdownButtonFormField<
-                                                  String>(
-                                                focusColor: Colors.white,
-                                                value: dropdownValue,
-                                                items: dropdownItems
-                                                    .map((String value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value,
-                                                    child: Text(value),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (newValue) {
-                                                  setState(() {
-                                                    _rows[rowIndex][cellIndex] =
-                                                        newValue;
-                                                  });
-                                                },
-                                                decoration:
-                                                    const InputDecoration(
-                                                  isDense: true,
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          vertical: 8.0),
-                                                  border: InputBorder.none,
+                                          String? dropdownValue = dropdownItems
+                                                  .contains(cellContent)
+                                              ? cellContent
+                                              : null;
+
+                                          return DataCell(
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                  maxWidth: 150,
+                                                ),
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  focusColor: Colors.white,
+                                                  value: dropdownValue,
+                                                  items: dropdownItems
+                                                      .map((String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      _rows[rowIndex]
+                                                              [cellIndex] =
+                                                          newValue;
+                                                    });
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    isDense: true,
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 8.0),
+                                                    border: InputBorder.none,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        return DataCell(
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 150,
-                                              ),
-                                              child: TextFormField(
-                                                initialValue: _formatNumber(
+                                          );
+                                        } else {
+                                          return DataCell(
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                  maxWidth: 150,
+                                                ),
+                                                child: TextFormField(
+                                                  initialValue: _formatNumber(
                                                         cellContent,
-                                                        rowIndex,
-                                                        cellIndex) ??
-                                                    '',
-                                                textAlign: TextAlign.center,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  isDense: true,
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          vertical: 8.0),
-                                                  border: InputBorder.none,
-                                                ),
-                                                onChanged: (newValue) {
-                                                  setState(() {
-                                                    String formattedValue =
-                                                        _formatNumber(
+                                                      ) ??
+                                                      '',
+                                                  textAlign: TextAlign.center,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    isDense: true,
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 8.0),
+                                                    border: InputBorder.none,
+                                                  ),
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      String formattedValue =
+                                                          _formatNumber(
                                                                 newValue,
-                                                                rowIndex,
-                                                                cellIndex) ??
-                                                            '';
+                                                              ) ??
+                                                              '';
 
-                                                    _rows[rowIndex][cellIndex] =
-                                                        formattedValue;
-                                                  });
-                                                },
+                                                      _rows[rowIndex]
+                                                              [cellIndex] =
+                                                          formattedValue;
+                                                    });
+                                                  },
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }
-                                    }).toList(),
-                                  );
-                                }),
-                              ],
+                                          );
+                                        }
+                                      }).toList(),
+                                    );
+                                  }),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -288,11 +296,11 @@ class PickRisksContentState extends State<PickRisksContent> {
   Future<void> _pickExcelFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
+      allowedExtensions: ['xlsx'],
     );
     if (result != null) {
       var filePath = result.files.first.path;
-      Uint8List? fileBytes = File(filePath ?? "").readAsBytesSync();
+      Uint8List? fileBytes = await File(filePath ?? "").readAsBytes();
       _readExcel(fileBytes);
     }
   }

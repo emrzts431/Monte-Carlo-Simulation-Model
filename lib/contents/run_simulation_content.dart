@@ -1,4 +1,11 @@
+import 'package:ICARA/contents/correlation_inputs_content.dart';
+import 'package:ICARA/data/app_logger.dart';
+import 'package:ICARA/services/navigation_service.dart';
+import 'package:ICARA/services/service_locator.dart';
+import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RunSimulationContent extends StatefulWidget {
   const RunSimulationContent({super.key});
@@ -10,10 +17,16 @@ class RunSimulationContent extends StatefulWidget {
 }
 
 class RunSimulationContentState extends State<RunSimulationContent> {
-  String _confidenceLevel = '95.0%';
-  String _numTrials = '10,000';
-  String _seedValue = '';
+  String _confidenceLevel = '99.50% BBB+';
+  int _numTrials = 10000;
+  String _seedValue = '1';
   bool _isTCopulaChecked = false;
+  final _seedValueController = TextEditingController();
+  @override
+  void initState() {
+    _seedValueController.text = _seedValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +73,20 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                     ),
                                   ),
                                 ),
-                                items: ['95.0%', '99.0%', '99.9%']
-                                    .map((String value) {
+                                items: [
+                                  '99.97% AAA',
+                                  '99.95% AA+',
+                                  '99.93% AA',
+                                  '99.90% AA-',
+                                  '99.87% A+',
+                                  '99.83% A',
+                                  '99.73% A-',
+                                  '99.50% BBB+',
+                                  '99.16% BBB',
+                                  '98.25% BBB-',
+                                  '96.60% BB+',
+                                  '94.10% BB',
+                                ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value),
@@ -87,7 +112,7 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                             ),
                             SizedBox(
                               width: 220,
-                              child: DropdownButtonFormField<String>(
+                              child: DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 value: _numTrials,
                                 focusColor: Colors.white,
@@ -107,11 +132,15 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                     ),
                                   ),
                                 ),
-                                items: ['1,000', '10,000', '100,000']
-                                    .map((String value) {
-                                  return DropdownMenuItem<String>(
+                                items: [
+                                  1000,
+                                  10000,
+                                  100000,
+                                  500000,
+                                ].map((int value) {
+                                  return DropdownMenuItem<int>(
                                     value: value,
-                                    child: Text(value),
+                                    child: Text(value.toString()),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -135,6 +164,7 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                             SizedBox(
                               width: 220,
                               child: TextField(
+                                controller: _seedValueController,
                                 onChanged: (value) {
                                   setState(() {
                                     _seedValue = value;
@@ -155,7 +185,7 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  hintText: 'Value',
+                                  labelText: 'Seed Value',
                                 ),
                                 style: const TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
@@ -182,30 +212,52 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                     ),
                     const SizedBox(height: 20),
                     Center(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(
-                          Icons.play_arrow,
-                          size: 32,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          "Run Simulation",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          backgroundColor: const Color(0xff00B0F0),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                        onPressed: () {
-                          debugPrint(_confidenceLevel);
-                          debugPrint(_numTrials);
-                          debugPrint(_seedValue);
-                          debugPrint(_isTCopulaChecked.toString());
-                        },
-                      ),
+                      child: context.watch<IcarasdkViewModel>().isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : ElevatedButton.icon(
+                              icon: const Icon(
+                                Icons.play_arrow,
+                                size: 32,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                "Run Simulation",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                backgroundColor: const Color(0xff00B0F0),
+                                textStyle: const TextStyle(fontSize: 16),
+                              ),
+                              onPressed: () async {
+                                try {
+                                  await context
+                                      .read<IcarasdkViewModel>()
+                                      .runSimulation(
+                                        context,
+                                        _isTCopulaChecked,
+                                        _confidenceLevel,
+                                        _numTrials,
+                                        int.parse(_seedValue),
+                                      );
+                                } on Exception catch (error, stackTrace) {
+                                  AppLogger.instance.error(error, stackTrace);
+                                  SnackbarHolder.showSnackbar(
+                                    "An error occured. Check if the values have the correct format.",
+                                    true,
+                                    locator<NavigationService>()
+                                            .navigatorKey
+                                            .currentContext ??
+                                        context,
+                                  );
+                                }
+                              },
+                            ),
                     ),
                   ],
                 ),

@@ -23,7 +23,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
   List<List<dynamic>> _rows = []; // Store the Excel rows
   List<String?> _columnNames = []; // Column names
   final _scrollController = ScrollController();
-  int choiceChipValue = 0;
+  int choiceChipValue = 3;
   List<String> correlationStyles = [
     "Use A Single Correlation",
     "Correlation between Inputs",
@@ -33,216 +33,223 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ChoiceChip(
-                padding: const EdgeInsets.all(10),
-                backgroundColor: Colors.grey[200],
-                label: Text(
-                  correlationStyles[0],
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ChoiceChip(
+                  padding: const EdgeInsets.all(10),
+                  backgroundColor: Colors.grey[200],
+                  label: Text(
+                    correlationStyles[0],
+                  ),
+                  selected: choiceChipValue == 0,
+                  onSelected: (bool value) {
+                    setState(() {
+                      choiceChipValue = 0;
+                    });
+                  },
                 ),
-                selected: choiceChipValue == 0,
-                onSelected: (bool value) {
-                  setState(() {
-                    choiceChipValue = 0;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ChoiceChip(
-                    backgroundColor: choiceChipValue == 0
-                        ? Colors.grey[300]
-                        : Colors.grey[200],
-                    label: Text(correlationStyles[1]),
-                    selected: choiceChipValue == 1,
-                    onSelected: (bool value) {
-                      setState(() {
-                        choiceChipValue = 1;
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    backgroundColor: choiceChipValue == 0
-                        ? Colors.grey[300]
-                        : Colors.grey[200],
-                    label: Text(correlationStyles[2]),
-                    selected: choiceChipValue == 2,
-                    onSelected: (bool value) {
-                      setState(() {
-                        choiceChipValue = 2;
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    backgroundColor: choiceChipValue == 0
-                        ? Colors.grey[300]
-                        : Colors.grey[200],
-                    label: Text(correlationStyles[3]),
-                    selected: choiceChipValue == 3,
-                    onSelected: (bool value) {
-                      setState(() {
-                        choiceChipValue = 3;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: _pickExcelFile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shadowColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    side: const BorderSide(color: Colors.black, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Import Excel',
-                    style: TextStyle(color: Colors.black),
-                  ),
+                const SizedBox(
+                  height: 4,
                 ),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: _clearCorrelations,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shadowColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    side: const BorderSide(color: Colors.black, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Clear Risks',
-                    style: TextStyle(color: Colors.black),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ChoiceChip(
+                      backgroundColor: choiceChipValue == 0
+                          ? Colors.grey[300]
+                          : Colors.grey[200],
+                      label: Text(correlationStyles[1]),
+                      selected: choiceChipValue == 1,
+                      onSelected: (bool value) {
+                        setState(() {
+                          choiceChipValue = 1;
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      backgroundColor: choiceChipValue == 0
+                          ? Colors.grey[300]
+                          : Colors.grey[200],
+                      label: Text(correlationStyles[2]),
+                      selected: choiceChipValue == 2,
+                      onSelected: (bool value) {
+                        setState(() {
+                          choiceChipValue = 2;
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      backgroundColor: choiceChipValue == 0
+                          ? Colors.grey[300]
+                          : Colors.grey[200],
+                      label: Text(correlationStyles[3]),
+                      selected: choiceChipValue == 3,
+                      onSelected: (bool value) {
+                        setState(() {
+                          choiceChipValue = 3;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: ElevatedButton(
+                    onPressed: _pickExcelFile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      side: const BorderSide(color: Colors.black, width: 2),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Import Excel',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: _saveCorrelations,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shadowColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    side: const BorderSide(color: Colors.black, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Save Risks',
-                    style: TextStyle(color: Colors.black),
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: ElevatedButton(
+                    onPressed: _clearCorrelations,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      side: const BorderSide(color: Colors.black, width: 2),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Clear Correlations',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          _rows.isEmpty
-              ? const Center(child: Text('No Data Loaded'))
-              : SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      thickness: 10,
-                      controller: _scrollController,
-                      child: SingleChildScrollView(
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: context.watch<IcarasdkViewModel>().isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ElevatedButton(
+                          onPressed: _saveCorrelations,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                            side:
+                                const BorderSide(color: Colors.black, width: 2),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Save Correlations',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            _rows.isEmpty
+                ? const Center(child: Text('No Data Loaded'))
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        thickness: 10,
                         controller: _scrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columns: _columnNames
-                              .map(
-                                (c) => DataColumn(
-                                  label: Text(
-                                    c ?? '',
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columns: _columnNames
+                                .map(
+                                  (c) => DataColumn(
+                                    label: Text(
+                                      c ?? '',
+                                    ),
                                   ),
-                                ),
-                              )
-                              .toList(),
-                          border:
-                              TableBorder.all(color: Colors.black, width: 1),
-                          rows: [
-                            ..._rows.asMap().entries.map((entry) {
-                              int rowIndex = entry.key;
-                              List<dynamic> row = entry.value;
+                                )
+                                .toList(),
+                            border:
+                                TableBorder.all(color: Colors.black, width: 1),
+                            rows: [
+                              ..._rows.asMap().entries.map((entry) {
+                                int rowIndex = entry.key;
+                                List<dynamic> row = entry.value;
 
-                              return DataRow(
-                                cells: row.asMap().entries.map((cellEntry) {
-                                  int cellIndex = cellEntry.key;
-                                  String cellContent =
-                                      cellEntry.value.toString();
+                                return DataRow(
+                                  cells: row.asMap().entries.map((cellEntry) {
+                                    int cellIndex = cellEntry.key;
+                                    String cellContent =
+                                        cellEntry.value.toString();
 
-                                  return DataCell(
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        constraints: const BoxConstraints(
-                                          maxWidth: 150,
-                                        ),
-                                        child: TextFormField(
-                                          initialValue: cellContent,
-                                          textAlign: TextAlign.center,
-                                          decoration: const InputDecoration(
-                                            isDense: true,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 8.0),
-                                            border: InputBorder.none,
+                                    return DataCell(
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
                                           ),
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              _rows[rowIndex][cellIndex] =
-                                                  newValue;
-                                            });
-                                          },
+                                          child: TextFormField(
+                                            initialValue: cellContent,
+                                            textAlign: TextAlign.center,
+                                            decoration: const InputDecoration(
+                                              isDense: true,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              border: InputBorder.none,
+                                            ),
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                _rows[rowIndex][cellIndex] =
+                                                    newValue;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            }),
-                          ],
+                                    );
+                                  }).toList(),
+                                );
+                              }),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -310,9 +317,14 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
       }
     }
 
-    //TODO: Implement Correlation inputs from the sdk
-    await context
-        .read<IcarasdkViewModel>()
-        .saveCorrelationInputs(context, cellValues);
+    await context.read<IcarasdkViewModel>().saveCorrelationInputs(
+          context,
+          cellValues,
+          _columnNames.length - 1,
+          choiceChipValue == 0,
+          choiceChipValue == 1,
+          choiceChipValue == 2,
+          choiceChipValue == 3,
+        );
   }
 }
