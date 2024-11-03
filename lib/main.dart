@@ -43,6 +43,9 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationService>().navigatorKey,
       scaffoldMessengerKey: locator<ScaffoldMessengerService>().scaffoldKey,
       theme: ThemeData(
+        scrollbarTheme: ScrollbarThemeData(
+          thumbVisibility: WidgetStateProperty.all<bool>(true),
+        ),
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: createMaterialColor(Colors.black),
           accentColor: createMaterialColor(Colors.black),

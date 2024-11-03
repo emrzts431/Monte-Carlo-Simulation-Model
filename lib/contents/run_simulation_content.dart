@@ -18,197 +18,201 @@ class RunSimulationContentState extends State<RunSimulationContent> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Container(
-            constraints: const BoxConstraints(maxWidth: 1000),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
+      child: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          width: 140,
-                          child: Text("Confidence Level:"),
-                        ),
-                        SizedBox(
-                          width: 220,
-                          child: DropdownButtonFormField<String>(
-                            isExpanded: true,
-                            value: _confidenceLevel,
-                            focusColor: Colors.white,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide: const BorderSide(
-                                  width: 1.4,
-                                  color: Colors.black,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              width: 140,
+                              child: Text("Confidence Level:"),
+                            ),
+                            SizedBox(
+                              width: 220,
+                              child: DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                value: _confidenceLevel,
+                                focusColor: Colors.white,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.black),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide: const BorderSide(
+                                      width: 1.4,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
+                                items: ['95.0%', '99.0%', '99.9%']
+                                    .map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _confidenceLevel = value!;
+                                  });
+                                },
+                                dropdownColor: Colors.white,
                               ),
                             ),
-                            items:
-                                ['95.0%', '99.0%', '99.9%'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _confidenceLevel = value!;
-                              });
-                            },
-                            dropdownColor: Colors.white,
-                          ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              width: 140,
+                              child: Text("No. of Trials:"),
+                            ),
+                            SizedBox(
+                              width: 220,
+                              child: DropdownButtonFormField<String>(
+                                isExpanded: true,
+                                value: _numTrials,
+                                focusColor: Colors.white,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.black),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide: const BorderSide(
+                                      width: 1.4,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                items: ['1,000', '10,000', '100,000']
+                                    .map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _numTrials = value!;
+                                  });
+                                },
+                                dropdownColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              width: 140,
+                              child: Text("Seed Value:"),
+                            ),
+                            SizedBox(
+                              width: 220,
+                              child: TextField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    _seedValue = value;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.black),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderSide: const BorderSide(
+                                      width: 1.4,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: 'Value',
+                                ),
+                                style: const TextStyle(color: Colors.black),
+                                cursorColor: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: _isTCopulaChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isTCopulaChecked = value!;
+                                });
+                              },
+                            ),
+                            const Text("T-Copula"),
+                          ],
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 140,
-                          child: Text("No. of Trials:"),
+                    Center(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(
+                          Icons.play_arrow,
+                          size: 32,
+                          color: Colors.white,
                         ),
-                        SizedBox(
-                          width: 220,
-                          child: DropdownButtonFormField<String>(
-                            isExpanded: true,
-                            value: _numTrials,
-                            focusColor: Colors.white,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide: const BorderSide(
-                                  width: 1.4,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            items: ['1,000', '10,000', '100,000']
-                                .map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _numTrials = value!;
-                              });
-                            },
-                            dropdownColor: Colors.white,
-                          ),
+                        label: const Text(
+                          "Run Simulation",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 140,
-                          child: Text("Seed Value:"),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          backgroundColor: const Color(0xff00B0F0),
+                          textStyle: const TextStyle(fontSize: 16),
                         ),
-                        SizedBox(
-                          width: 220,
-                          child: TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                _seedValue = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                borderSide: const BorderSide(
-                                  width: 1.4,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: 'Value',
-                            ),
-                            style: const TextStyle(color: Colors.black),
-                            cursorColor: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _isTCopulaChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isTCopulaChecked = value!;
-                            });
-                          },
-                        ),
-                        const Text("T-Copula"),
-                      ],
+                        onPressed: () {
+                          debugPrint(_confidenceLevel);
+                          debugPrint(_numTrials);
+                          debugPrint(_seedValue);
+                          debugPrint(_isTCopulaChecked.toString());
+                        },
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 50),
-                Center(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.play_arrow,
-                      size: 32,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      "Run Simulation",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
-                      backgroundColor: const Color(0xff00B0F0),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                    onPressed: () {
-                      debugPrint(_confidenceLevel);
-                      debugPrint(_numTrials);
-                      debugPrint(_seedValue);
-                      debugPrint(_isTCopulaChecked.toString());
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
