@@ -4,6 +4,7 @@
 import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/contents/pick_risks_content.dart';
 import 'package:ICARA/contents/run_simulation_content.dart';
+import 'package:ICARA/contents/insurance_parameters_content.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -135,7 +136,7 @@ class _InsurancePricingState extends State<InsurancePricing> {
       case 0:
         return const PickRisksContent(); // Default Excel Viewer content
       case 1:
-        return const Center(child: Text('Content of Tab 1'));
+        return const InsuranceParametersContent();
       case 2:
         return const CorrelationInputsContent();
       case 3:
