@@ -7,16 +7,16 @@ import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RunSimulationContent extends StatefulWidget {
-  const RunSimulationContent({super.key});
+class RarocParametersContent extends StatefulWidget {
+  const RarocParametersContent({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return RunSimulationContentState();
+    return RarocParametersContentState();
   }
 }
 
-class RunSimulationContentState extends State<RunSimulationContent> {
+class RarocParametersContentState extends State<RarocParametersContent> {
   String _confidenceLevel = '99.50% BBB+';
   int _numTrials = 10000;
   String _seedValue = '1';

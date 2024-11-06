@@ -1,69 +1,147 @@
-import 'dart:typed_data';
+// import 'dart:io';
+// import 'dart:typed_data';
 
-import 'package:excel/excel.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:ICARA/contents/correlation_inputs_content.dart';
+import 'package:ICARA/contents/pick_risks_content.dart';
+import 'package:ICARA/contents/run_simulation_content.dart';
+import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
 class InsurancePricing extends StatefulWidget {
   const InsurancePricing({super.key});
 
   @override
-  InsurancePricingState createState() => InsurancePricingState();
+  State<StatefulWidget> createState() {
+    return _InsurancePricingState();
+  }
 }
 
-class InsurancePricingState extends State<InsurancePricing> {
-  List<List<dynamic>> _rows = [];
-
-  Future<void> _pickExcelFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx'],
-    );
-
-    if (result != null) {
-      Uint8List? fileBytes = result.files.first.bytes;
-      if (fileBytes != null) {
-        _readExcel(fileBytes);
-      }
-    }
-  }
-
-  void _readExcel(Uint8List fileBytes) {
-    var excel = Excel.decodeBytes(fileBytes);
-    List<List<dynamic>> rows = [];
-
-    for (var table in excel.tables.keys) {
-      for (var row in excel.tables[table]!.rows) {
-        rows.add(row);
-      }
-    }
-
-    setState(() {
-      _rows = rows;
-    });
-  }
+class _InsurancePricingState extends State<InsurancePricing> {
+  int _currentIndex = 0; // Variable to track the selected content
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: _pickExcelFile,
-          child: const Text('Pick Excel File'),
-        ),
-        Expanded(
-          child: _rows.isEmpty
-              ? const Center(child: Text('No Data Loaded'))
-              : ListView.builder(
-                  itemCount: _rows.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_rows[index].join(', ')),
-                    );
-                  },
-                ),
-        ),
-      ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Insurance Pricing'),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+            child: const Text(
+              'Risk Inputs',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 1;
+              });
+            },
+            child: const Text(
+              'Insurance Parameters',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 2;
+              });
+            },
+            child: const Text(
+              'Correlation Inputs',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 3;
+              });
+            },
+            child: const Text(
+              'Simulation',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 3;
+              });
+            },
+            child: const Text(
+              'Detailed Report',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 50,
+          ),
+        ],
+      ),
+      drawer: const CustomNavigationDrawer(),
+      body: Column(
+        children: [
+          // Buttons at the top
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+
+          //   ],
+          // ),
+          // Dynamic content based on the button clicked
+          Expanded(
+            child: _getContentWidget(),
+          ),
+        ],
+      ),
     );
+  }
+
+  // Method to return content based on the selected index
+  Widget _getContentWidget() {
+    switch (_currentIndex) {
+      case 0:
+        return const PickRisksContent(); // Default Excel Viewer content
+      case 1:
+        return const Center(child: Text('Content of Tab 1'));
+      case 2:
+        return const CorrelationInputsContent();
+      case 3:
+        return const RunSimulationContent();
+      default:
+        return const PickRisksContent();
+    }
   }
 }
