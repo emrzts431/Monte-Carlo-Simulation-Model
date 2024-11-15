@@ -5,6 +5,7 @@ import 'package:ICARA/services/navigation_service.dart';
 import 'package:ICARA/services/service_locator.dart';
 import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -16,7 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IcarasdkViewModel extends ChangeNotifier {
-  int _id = 0;
+  final int _id = 0;
 
   //Risk Input Contents
   List<List<dynamic>> rowsRiskInputs = [];
@@ -53,15 +54,29 @@ class IcarasdkViewModel extends ChangeNotifier {
     await initiateSdkFolder();
     if (!_isSdkStarted) {
       try {
-        final byteData = await rootBundle.load('assets/icarasdk/ICARASdk.exe');
-        final buffer = byteData.buffer;
-        Directory tempDir = await getTemporaryDirectory();
-        String tempPath = tempDir.path;
-        var filePath =
-            '$tempPath/sdk.exe'; // file_01.tmp is dump file, can be anything
-        var file = await File(filePath).writeAsBytes(
-            buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-        _csharpProcess = await Process.start(filePath, []);
+        _isLoading = true;
+        notifyListeners();
+
+        //Load the assembled ICARA SDK
+        String? filePath;
+        if (!kDebugMode) {
+          final byteData =
+              await rootBundle.load('assets/icarasdk/ICARASdk.exe');
+          final buffer = byteData.buffer;
+          Directory tempDir = await getTemporaryDirectory();
+          String tempPath = tempDir.path;
+          filePath = '$tempPath/sdk.exe';
+          var file = await File(filePath).writeAsBytes(buffer.asUint8List(
+              byteData.offsetInBytes, byteData.lengthInBytes));
+        } else {
+          //Development only!
+          filePath = await Preferences.getSdkLocation();
+          if (filePath == null || filePath.isEmpty) {
+            await pickSdkFile();
+            filePath = await Preferences.getSdkLocation();
+          }
+        }
+        _csharpProcess = await Process.start(filePath!, []);
         _csharpProcess?.stdout.listen(_onDataReceived);
         _isSdkStarted = true;
       } on Exception catch (e, stackTrace) {
@@ -71,6 +86,8 @@ class IcarasdkViewModel extends ChangeNotifier {
           true,
           locator<NavigationService>().navigatorKey.currentContext ?? context,
         );
+        _isLoading = false;
+        notifyListeners();
       }
     }
   }
@@ -127,6 +144,8 @@ class IcarasdkViewModel extends ChangeNotifier {
       SnackbarHolder.showSnackbar("Sdk started", false,
           locator<NavigationService>().navigatorKey.currentContext!);
       AppLogger.instance.debug("ICARA SDK initiated and ready...");
+      _isLoading = false;
+      notifyListeners();
     } else if (strMessage.startsWith('Content-Length')) {
       _isLoading = false;
       notifyListeners();

@@ -4,6 +4,7 @@ import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/pages/raroc.dart';
 import 'package:ICARA/pages/insurance_pricing.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:ICARA/pages/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,7 @@ import 'package:ICARA/dialogs/model_assumption_dialog.dart';
 import 'package:provider/provider.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
-  CustomNavigationDrawer({super.key});
-  int currentIndex = 0;
+  const CustomNavigationDrawer({super.key});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -198,12 +198,13 @@ class CustomNavigationDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(
-                  title: const Text("Change SDK Location"),
-                  leading: const Icon(Icons.edit),
-                  onTap: () async =>
-                      await context.read<IcarasdkViewModel>().pickSdkFile(),
-                ),
+                if (kDebugMode)
+                  ListTile(
+                    title: const Text("Change SDK Location"),
+                    leading: const Icon(Icons.edit),
+                    onTap: () async =>
+                        await context.read<IcarasdkViewModel>().pickSdkFile(),
+                  ),
               ]),
           ListTile(
             leading: const Icon(Icons.question_mark_rounded),

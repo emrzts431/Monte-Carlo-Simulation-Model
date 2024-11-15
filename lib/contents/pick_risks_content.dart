@@ -30,6 +30,7 @@ class PickRisksContentState extends State<PickRisksContent> {
           Preferences.BUCKET_1_CATEGORIES);
       _lossTypes = await Preferences.getBucketCategories(
           Preferences.BUCKET_2_CATEGORIES);
+      setState(() {});
     });
     super.initState();
   }
