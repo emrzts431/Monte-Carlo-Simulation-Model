@@ -19,11 +19,6 @@ class PickRisksContent extends StatefulWidget {
 }
 
 class PickRisksContentState extends State<PickRisksContent> {
-  // final _logger = Logger(
-  //   printer: PrettyPrinter(methodCount: 1),
-  // );
-  List<List<dynamic>> _rows = [];
-  List<String> _columnNames = [];
   List<String> _kfactors = [];
   List<String> _lossTypes = [];
   final _scrollController = ScrollController();
@@ -127,7 +122,7 @@ class PickRisksContentState extends State<PickRisksContent> {
             const SizedBox(
               height: 50,
             ),
-            _rows.isEmpty
+            context.read<IcarasdkViewModel>().rowsRiskInputs.isEmpty
                 ? const Center(child: Text('No Data Loaded'))
                 : Center(
                     child: SizedBox(
@@ -153,7 +148,9 @@ class PickRisksContentState extends State<PickRisksContent> {
                                 //       index++)
                                 //     index: const IntrinsicColumnWidth()
                                 // },
-                                columns: _columnNames
+                                columns: context
+                                    .read<IcarasdkViewModel>()
+                                    .columnNamesRisks
                                     .map(
                                       (c) => DataColumn(
                                         label: Text(
@@ -163,7 +160,12 @@ class PickRisksContentState extends State<PickRisksContent> {
                                     )
                                     .toList(),
                                 rows: [
-                                  ..._rows.asMap().entries.map((entry) {
+                                  ...context
+                                      .read<IcarasdkViewModel>()
+                                      .rowsRiskInputs
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
                                     int rowIndex = entry.key;
                                     List<dynamic> row = entry.value;
 
@@ -174,16 +176,28 @@ class PickRisksContentState extends State<PickRisksContent> {
                                         String cellContent =
                                             cellEntry.value.toString();
 
-                                        if (_columnNames[cellIndex] ==
+                                        if (context
+                                                        .read<IcarasdkViewModel>()
+                                                        .columnNamesRisks[
+                                                    cellIndex] ==
                                                 'K-Factors' ||
-                                            _columnNames[cellIndex] ==
+                                            context
+                                                        .read<IcarasdkViewModel>()
+                                                        .columnNamesRisks[
+                                                    cellIndex] ==
                                                 'Loss Types') {
                                           List<String> dropdownItems = [];
 
-                                          if (_columnNames[cellIndex] ==
+                                          if (context
+                                                      .read<IcarasdkViewModel>()
+                                                      .columnNamesRisks[
+                                                  cellIndex] ==
                                               'K-Factors') {
                                             dropdownItems = _kfactors;
-                                          } else if (_columnNames[cellIndex] ==
+                                          } else if (context
+                                                      .read<IcarasdkViewModel>()
+                                                      .columnNamesRisks[
+                                                  cellIndex] ==
                                               'Loss Types') {
                                             dropdownItems = _lossTypes;
                                           }
@@ -216,9 +230,12 @@ class PickRisksContentState extends State<PickRisksContent> {
                                                   }).toList(),
                                                   onChanged: (newValue) {
                                                     setState(() {
-                                                      _rows[rowIndex]
-                                                              [cellIndex] =
-                                                          newValue;
+                                                      context
+                                                                  .read<
+                                                                      IcarasdkViewModel>()
+                                                                  .rowsRiskInputs[
+                                                              rowIndex][
+                                                          cellIndex] = newValue;
                                                     });
                                                   },
                                                   decoration:
@@ -265,8 +282,11 @@ class PickRisksContentState extends State<PickRisksContent> {
                                                               ) ??
                                                               '';
 
-                                                      _rows[rowIndex]
-                                                              [cellIndex] =
+                                                      context
+                                                                  .read<
+                                                                      IcarasdkViewModel>()
+                                                                  .rowsRiskInputs[
+                                                              rowIndex][cellIndex] =
                                                           formattedValue;
                                                     });
                                                   },
@@ -314,10 +334,11 @@ class PickRisksContentState extends State<PickRisksContent> {
       // print(excel.tables[table]?.maxColumns);
       // print(excel.tables[table]?.maxRows);
       if (excel.tables[table]?.maxColumns != 0) {
-        _columnNames = excel.tables[table]!.rows[0]
+        context.read<IcarasdkViewModel>().columnNamesRisks = excel
+            .tables[table]!.rows[0]
             .map((d) => d!.value.toString())
             .toList();
-        _columnNames.insert(0, "Risk No");
+        context.read<IcarasdkViewModel>().columnNamesRisks.insert(0, "Risk No");
         for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
           List<dynamic> customRow = [];
           for (var cell in excel.tables[table]!.rows[i]) {
@@ -334,20 +355,20 @@ class PickRisksContentState extends State<PickRisksContent> {
     }
 
     setState(() {
-      _rows = rows;
+      context.read<IcarasdkViewModel>().rowsRiskInputs = rows;
     });
   }
 
   void _clearRisks() {
     setState(() {
-      _columnNames = [];
-      _rows = [];
+      context.read<IcarasdkViewModel>().columnNamesRisks = [];
+      context.read<IcarasdkViewModel>().rowsRiskInputs = [];
     });
   }
 
   Future _saveRisks() async {
     final List<String> cellValues = [];
-    for (var row in _rows) {
+    for (var row in context.read<IcarasdkViewModel>().rowsRiskInputs) {
       for (var cell in row) {
         cellValues.add(cell.toString());
       }

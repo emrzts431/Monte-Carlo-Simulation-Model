@@ -1,7 +1,9 @@
+import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/pages/capital_modeling.dart';
 import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/pages/raroc.dart';
 import 'package:ICARA/pages/insurance_pricing.dart';
+import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 //import 'package:ICARA/pages/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +13,11 @@ import 'package:ICARA/dialogs/bucket_2_categories_dialog.dart';
 import 'package:ICARA/dialogs/degrees_of_freedom_dialog.dart';
 import 'package:ICARA/dialogs/global_correlation_dialog.dart';
 import 'package:ICARA/dialogs/model_assumption_dialog.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
-  const CustomNavigationDrawer({super.key});
-
+  CustomNavigationDrawer({super.key});
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -60,10 +63,11 @@ class CustomNavigationDrawer extends StatelessWidget {
             leading: const Icon(Icons.bar_chart),
             title: const Text('Capital Modeling'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CapitalModeling()),
+                  builder: (context) => const CapitalModeling(),
+                ),
               );
             },
           ),
@@ -71,9 +75,9 @@ class CustomNavigationDrawer extends StatelessWidget {
             leading: const Icon(Icons.pie_chart_outline),
             title: const Text('RAROC'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Raroc()),
+                MaterialPageRoute(builder: (context) => Raroc()),
               );
             },
           ),
@@ -81,7 +85,7 @@ class CustomNavigationDrawer extends StatelessWidget {
             leading: const Icon(Icons.stacked_line_chart),
             title: const Text('Insurance Pricing'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const InsurancePricing()),
@@ -94,16 +98,6 @@ class CustomNavigationDrawer extends StatelessWidget {
             endIndent: 15,
             color: Colors.grey,
           ),
-          //ListTile(
-          //  leading: const Icon(Icons.settings),
-          //  title: const Text('Settings'),
-          //  onTap: () {
-          //    Navigator.push(
-          //      context,
-          //      MaterialPageRoute(builder: (context) => Settings()),
-          //    );
-          //  },
-          //),
           ExpansionTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
@@ -203,6 +197,12 @@ class CustomNavigationDrawer extends StatelessWidget {
                       },
                     );
                   },
+                ),
+                ListTile(
+                  title: const Text("Change SDK Location"),
+                  leading: const Icon(Icons.edit),
+                  onTap: () async =>
+                      await context.read<IcarasdkViewModel>().pickSdkFile(),
                 ),
               ]),
           ListTile(

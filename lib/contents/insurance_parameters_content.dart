@@ -1,4 +1,6 @@
+import 'package:ICARA/data/app_logger.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,7 @@ class InsuranceParametersContentState
   void initState() {
     _excessController.text = _excess;
     _limitOfIndemnityController.text = _limitOfIndemnity;
+
     super.initState();
   }
 
@@ -150,7 +153,26 @@ class InsuranceParametersContentState
                                 backgroundColor: const Color(0xff00B0F0),
                                 textStyle: const TextStyle(fontSize: 16),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                try {
+                                  context.read<IcarasdkViewModel>().excess =
+                                      int.parse(_excess);
+                                  context
+                                          .read<IcarasdkViewModel>()
+                                          .limitOfIndemnity =
+                                      int.parse(_limitOfIndemnity);
+                                  SnackbarHolder.showSnackbar(
+                                      "Successfully saved insurance parameters",
+                                      false,
+                                      context);
+                                } on Exception catch (e, s) {
+                                  AppLogger.instance.error(e, s);
+                                  SnackbarHolder.showSnackbar(
+                                      "Error while saving insurance parameters",
+                                      true,
+                                      context);
+                                }
+                              },
                             ),
                     ),
                   ],

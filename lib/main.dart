@@ -7,13 +7,14 @@ import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart';
 
 final _logger = Logger(printer: PrettyPrinter(methodCount: 1));
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await windowManager.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowTitle('Monte Carlo Simulation Model');
     setWindowMinSize(const Size(1000, 500));

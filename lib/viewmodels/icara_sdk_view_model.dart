@@ -1,3 +1,4 @@
+import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/data/app_logger.dart';
 import 'package:ICARA/data/preferences.dart';
 import 'package:ICARA/services/navigation_service.dart';
@@ -11,10 +12,33 @@ import 'dart:convert';
 
 import 'package:ICARA/models/icara_sdk_message_request.dart';
 import 'package:ICARA/models/icara_sdk_message_response.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IcarasdkViewModel extends ChangeNotifier {
   int _id = 0;
+
+  //Risk Input Contents
+  List<List<dynamic>> rowsRiskInputs = [];
+  List<String> columnNamesRisks = [];
+
+  //Correlation Input Contents
+  List<List<dynamic>> rowsCorrelationInputs = [];
+  List<String> columnNamesCorrealtionInputs = [];
+  int selectedCorrelationStyle = 3;
+
+  //RAROC Extra parameters
+  double expectedReturn = 1000000;
+
+  //Insurance pricing extra parameters
+  int excess = 5000000;
+  int limitOfIndemnity = 15000000;
+
+  //Simulation
+  bool tCapula = false;
+  String seedValue = "1";
+  int numTrials = 10000;
+  String confidenceLevel = "99.50% BBB+";
 
   bool _isLoading = false;
   get isLoading => _isLoading;
@@ -26,36 +50,39 @@ class IcarasdkViewModel extends ChangeNotifier {
   Completer<IcaraSdkMessageResponse>? _sdkResponseCompleter;
 
   init(BuildContext context) async {
-    // await initiateSdkFolder();
-    // if (!_isSdkStarted) {
-    //   try {
-    //     String? serviceExecutable = await Preferences.getSdkLocation();
-    //     if (serviceExecutable == null || serviceExecutable.isEmpty) {
-    //       serviceExecutable = await _pickSdkFile();
-    //       await Preferences.setSdkLocation(serviceExecutable);
-    //     }
-    //     _csharpProcess = await Process.start(serviceExecutable ?? "", []);
-    //     _csharpProcess?.stdout.listen(_onDataReceived);
-    //     _isSdkStarted = true;
-    //   } on Exception catch (e, stackTrace) {
-    //     AppLogger.instance.error(e, stackTrace);
-    //     SnackbarHolder.showSnackbar(
-    //       "An error happened while starting the sdk",
-    //       true,
-    //       locator<NavigationService>().navigatorKey.currentContext ?? context,
-    //     );
-    //   }
-    // }
+    await initiateSdkFolder();
+    if (!_isSdkStarted) {
+      try {
+        final byteData = await rootBundle.load('assets/icarasdk/ICARASdk.exe');
+        final buffer = byteData.buffer;
+        Directory tempDir = await getTemporaryDirectory();
+        String tempPath = tempDir.path;
+        var filePath =
+            '$tempPath/sdk.exe'; // file_01.tmp is dump file, can be anything
+        var file = await File(filePath).writeAsBytes(
+            buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+        _csharpProcess = await Process.start(filePath, []);
+        _csharpProcess?.stdout.listen(_onDataReceived);
+        _isSdkStarted = true;
+      } on Exception catch (e, stackTrace) {
+        AppLogger.instance.error(e, stackTrace);
+        SnackbarHolder.showSnackbar(
+          "An error happened while starting the sdk",
+          true,
+          locator<NavigationService>().navigatorKey.currentContext ?? context,
+        );
+      }
+    }
   }
 
-  Future<String?> _pickSdkFile() async {
+  Future pickSdkFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: "Please select the ICARA Sdk",
       type: FileType.custom,
       allowedExtensions: ['exe'],
     );
     if (result != null) {
-      return result.paths.first;
+      await Preferences.setSdkLocation(result.paths.first);
     }
     return null;
   }
@@ -82,11 +109,11 @@ class IcarasdkViewModel extends ChangeNotifier {
           } else if (entity is Directory) {
             await entity.delete(recursive: true);
           }
-          AppLogger.instance.debug("Cleared content within SDK folder.");
         } on Exception catch (e, stackTrace) {
           AppLogger.instance.error(e, stackTrace);
         }
       }
+      AppLogger.instance.debug("Cleared content within SDK folder.");
     } else {
       // If it doesn't exist, create it
       await folderPath.create();
@@ -97,6 +124,8 @@ class IcarasdkViewModel extends ChangeNotifier {
   dynamic _onDataReceived(event) {
     var strMessage = utf8.decode(event);
     if (strMessage == 'Icara SDK started\r\n') {
+      SnackbarHolder.showSnackbar("Sdk started", false,
+          locator<NavigationService>().navigatorKey.currentContext!);
       AppLogger.instance.debug("ICARA SDK initiated and ready...");
     } else if (strMessage.startsWith('Content-Length')) {
       _isLoading = false;
@@ -213,10 +242,8 @@ class IcarasdkViewModel extends ChangeNotifier {
     bool tCapula,
     String cmdUserDefined,
     int noTrials,
-    int seed, {
-    Map<String, dynamic>? insuranceParameters,
-    double? rarocExpectedReturn = 1000000,
-  }) async {
+    int seed,
+  ) async {
     try {
       var businessUnits = await Preferences.getBucketCategories(
           Preferences.BUCKET_1_CATEGORIES);
@@ -224,9 +251,9 @@ class IcarasdkViewModel extends ChangeNotifier {
           Preferences.BUCKET_2_CATEGORIES);
       var modelAssumptions = await Preferences.getModelAssumptions();
       int degreesOfFreedom = await Preferences.getDegreesOfFreedom();
-      insuranceParameters ??= {
-        'excess': 5000000,
-        'limit_of_indemnity': 15000000
+      Map<String, dynamic> insuranceParameters = {
+        'excess': excess,
+        'limit_of_indemnity': limitOfIndemnity
       };
       await callMethod('RunSimulationAsync', [
         tCapula,
@@ -238,7 +265,7 @@ class IcarasdkViewModel extends ChangeNotifier {
         modelAssumptions,
         degreesOfFreedom,
         insuranceParameters,
-        rarocExpectedReturn,
+        expectedReturn,
       ]).then((value) {
         if (value.result == "Success") {
           SnackbarHolder.showSnackbar(
@@ -276,12 +303,24 @@ class IcarasdkViewModel extends ChangeNotifier {
       return await targetFile.readAsLines();
     } on Exception catch (error, stackTrace) {
       AppLogger.instance.error(error, stackTrace);
-      SnackbarHolder.showSnackbar(
-        "An error occured while reading the file. Either the file doesn't exist or the application doesn't have the permissions to access the file.",
-        true,
-        locator<NavigationService>().navigatorKey.currentContext ?? context,
-      );
       return null;
     }
+  }
+
+  void resetParameters() {
+    rowsRiskInputs = [];
+    rowsCorrelationInputs = [];
+    columnNamesRisks = [];
+    columnNamesCorrealtionInputs = [];
+
+    selectedCorrelationStyle = 3;
+    expectedReturn = 1000000;
+    excess = 5000000;
+    limitOfIndemnity = 15000000;
+
+    tCapula = false;
+    seedValue = "1";
+    numTrials = 10000;
+    confidenceLevel = "99.50% BBB+";
   }
 }

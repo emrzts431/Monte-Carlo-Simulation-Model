@@ -1,4 +1,6 @@
+import 'package:ICARA/data/app_logger.dart';
 import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ class RarocParametersContentState extends State<RarocParametersContent> {
   @override
   void initState() {
     _expectedReturnController.text = _expectedReturn;
+
     super.initState();
   }
 
@@ -111,7 +114,25 @@ class RarocParametersContentState extends State<RarocParametersContent> {
                                 backgroundColor: const Color(0xff00B0F0),
                                 textStyle: const TextStyle(fontSize: 16),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                try {
+                                  context
+                                          .read<IcarasdkViewModel>()
+                                          .expectedReturn =
+                                      double.parse(_expectedReturn);
+
+                                  SnackbarHolder.showSnackbar(
+                                      "Successfully saved expected return",
+                                      false,
+                                      context);
+                                } on Exception catch (e, s) {
+                                  AppLogger.instance.error(e, s);
+                                  SnackbarHolder.showSnackbar(
+                                      "Error while saving expected return",
+                                      true,
+                                      context);
+                                }
+                              },
                             ),
                     ),
                   ],

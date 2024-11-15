@@ -89,18 +89,19 @@ class Preferences {
   }
 
   static Future setModelAssumptions(
-      double defOfWorstCase, double defOfTypicalCase, String sevModel) async {
+      String defOfWorstCase, String defOfTypicalCase, String sevModel) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(MODEL_ASSUMPTIONS_WORST_CASE, defOfWorstCase);
-    await prefs.setDouble(MODEL_ASSUMPTIONS_TYPICAL_CASE, defOfTypicalCase);
+    await prefs.setString(MODEL_ASSUMPTIONS_WORST_CASE, defOfWorstCase);
+    await prefs.setString(MODEL_ASSUMPTIONS_TYPICAL_CASE, defOfTypicalCase);
     await prefs.setString(MODEL_ASSUMPTIONS_SEVERITY_MODEL, sevModel);
   }
 
   static Future<Map<String, dynamic>> getModelAssumptions() async {
     final prefs = await SharedPreferences.getInstance();
-    double defWorstCase = prefs.getDouble(MODEL_ASSUMPTIONS_WORST_CASE) ?? 0.95;
-    double defTypicalCase =
-        prefs.getDouble(MODEL_ASSUMPTIONS_TYPICAL_CASE) ?? 0.75;
+    String defWorstCase =
+        prefs.getString(MODEL_ASSUMPTIONS_WORST_CASE) ?? "0.95";
+    String defTypicalCase =
+        prefs.getString(MODEL_ASSUMPTIONS_TYPICAL_CASE) ?? "0.75";
     String sevModel =
         prefs.getString(MODEL_ASSUMPTIONS_SEVERITY_MODEL) ?? "LogNormal";
     return {

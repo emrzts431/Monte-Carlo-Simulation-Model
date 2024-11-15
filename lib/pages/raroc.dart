@@ -1,15 +1,23 @@
 // import 'dart:io';
 // import 'dart:typed_data';
+// import 'dart:io';
+// import 'dart:typed_data';
 
 import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/contents/pick_risks_content.dart';
+import 'package:ICARA/contents/report_content.dart';
 import 'package:ICARA/contents/run_simulation_content.dart';
 import 'package:ICARA/contents/raroc_parameters_content.dart';
+import 'package:ICARA/services/navigation_service.dart';
+import 'package:ICARA/services/service_locator.dart';
+import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
+
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Raroc extends StatefulWidget {
-  const Raroc({super.key});
+  Raroc({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -18,7 +26,22 @@ class Raroc extends StatefulWidget {
 }
 
 class _RarocState extends State<Raroc> {
-  int _currentIndex = 0; // Variable to track the selected content
+  late int currentIndex;
+  @override
+  void initState() {
+    currentIndex = 0;
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+      await (locator<NavigationService>().navigatorKey.currentContext ??
+              context)
+          .read<IcarasdkViewModel>()
+          .initiateSdkFolder();
+
+      (locator<NavigationService>().navigatorKey.currentContext ?? context)
+          .read<IcarasdkViewModel>()
+          .resetParameters();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +54,13 @@ class _RarocState extends State<Raroc> {
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+                backgroundColor: currentIndex == 0
+                    ? Colors.blueGrey
+                    : const Color(0xff00B0F0),
+                elevation: 0),
             onPressed: () {
               setState(() {
-                _currentIndex = 0;
+                currentIndex = 0;
               });
             },
             child: const Text(
@@ -47,10 +73,13 @@ class _RarocState extends State<Raroc> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+                backgroundColor: currentIndex == 1
+                    ? Colors.blueGrey
+                    : const Color(0xff00B0F0),
+                elevation: 0),
             onPressed: () {
               setState(() {
-                _currentIndex = 1;
+                currentIndex = 1;
               });
             },
             child: const Text(
@@ -63,10 +92,13 @@ class _RarocState extends State<Raroc> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+                backgroundColor: currentIndex == 2
+                    ? Colors.blueGrey
+                    : const Color(0xff00B0F0),
+                elevation: 0),
             onPressed: () {
               setState(() {
-                _currentIndex = 2;
+                currentIndex = 2;
               });
             },
             child: const Text(
@@ -79,10 +111,13 @@ class _RarocState extends State<Raroc> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+                backgroundColor: currentIndex == 3
+                    ? Colors.blueGrey
+                    : const Color(0xff00B0F0),
+                elevation: 0),
             onPressed: () {
               setState(() {
-                _currentIndex = 3;
+                currentIndex = 3;
               });
             },
             child: const Text(
@@ -95,14 +130,17 @@ class _RarocState extends State<Raroc> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff00B0F0), elevation: 0),
+                backgroundColor: currentIndex == 4
+                    ? Colors.blueGrey
+                    : const Color(0xff00B0F0),
+                elevation: 0),
             onPressed: () {
               setState(() {
-                _currentIndex = 3;
+                currentIndex = 4;
               });
             },
             child: const Text(
-              'Detailed Report',
+              'Report',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -111,7 +149,7 @@ class _RarocState extends State<Raroc> {
           ),
         ],
       ),
-      drawer: const CustomNavigationDrawer(),
+      drawer: CustomNavigationDrawer(),
       body: Column(
         children: [
           // Buttons at the top
@@ -132,7 +170,7 @@ class _RarocState extends State<Raroc> {
 
   // Method to return content based on the selected index
   Widget _getContentWidget() {
-    switch (_currentIndex) {
+    switch (currentIndex) {
       case 0:
         return const PickRisksContent(); // Default Excel Viewer content
       case 1:
@@ -141,6 +179,8 @@ class _RarocState extends State<Raroc> {
         return const CorrelationInputsContent();
       case 3:
         return const RunSimulationContent();
+      case 4:
+        return ReportContent();
       default:
         return const PickRisksContent();
     }

@@ -22,10 +22,8 @@ class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
       final modelAssumptions = await Preferences.getModelAssumptions();
-      _defTCaseController.text =
-          (modelAssumptions['typicalCase'] as double).toString();
-      _defWCaseController.text =
-          (modelAssumptions['worstCase'] as double).toString();
+      _defTCaseController.text = modelAssumptions['typicalCase'].toString();
+      _defWCaseController.text = modelAssumptions['worstCase'].toString();
       dropdownValue = modelAssumptions['sevModel'];
     });
     super.initState();
@@ -116,8 +114,8 @@ class ModelAssumptionDialogState extends State<ModelAssumptionDialog> {
           onPressed: () async {
             try {
               await Preferences.setModelAssumptions(
-                double.parse(_defWCaseController.text),
-                double.parse(_defTCaseController.text),
+                _defWCaseController.text,
+                _defTCaseController.text,
                 dropdownValue ?? 'LogNormal',
               ).then((value) {
                 SnackbarHolder.showSnackbar(

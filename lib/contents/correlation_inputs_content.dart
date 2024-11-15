@@ -17,13 +17,8 @@ class CorrelationInputsContent extends StatefulWidget {
 }
 
 class CorrelationInputsContentState extends State<CorrelationInputsContent> {
-  // final _logger = Logger(
-  //   printer: PrettyPrinter(methodCount: 1),
-  // );
-  List<List<dynamic>> _rows = []; // Store the Excel rows
-  List<String?> _columnNames = []; // Column names
   final _scrollController = ScrollController();
-  int choiceChipValue = 3;
+
   List<String> correlationStyles = [
     "Use A Single Correlation",
     "Correlation between Inputs",
@@ -50,10 +45,15 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                   label: Text(
                     correlationStyles[0],
                   ),
-                  selected: choiceChipValue == 0,
+                  selected: context
+                          .read<IcarasdkViewModel>()
+                          .selectedCorrelationStyle ==
+                      0,
                   onSelected: (bool value) {
                     setState(() {
-                      choiceChipValue = 0;
+                      context
+                          .read<IcarasdkViewModel>()
+                          .selectedCorrelationStyle = 0;
                     });
                   },
                 ),
@@ -65,38 +65,62 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ChoiceChip(
-                      backgroundColor: choiceChipValue == 0
+                      backgroundColor: context
+                                  .read<IcarasdkViewModel>()
+                                  .selectedCorrelationStyle ==
+                              0
                           ? Colors.grey[300]
                           : Colors.grey[200],
                       label: Text(correlationStyles[1]),
-                      selected: choiceChipValue == 1,
+                      selected: context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle ==
+                          1,
                       onSelected: (bool value) {
                         setState(() {
-                          choiceChipValue = 1;
+                          context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle = 1;
                         });
                       },
                     ),
                     ChoiceChip(
-                      backgroundColor: choiceChipValue == 0
+                      backgroundColor: context
+                                  .read<IcarasdkViewModel>()
+                                  .selectedCorrelationStyle ==
+                              0
                           ? Colors.grey[300]
                           : Colors.grey[200],
                       label: Text(correlationStyles[2]),
-                      selected: choiceChipValue == 2,
+                      selected: context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle ==
+                          2,
                       onSelected: (bool value) {
                         setState(() {
-                          choiceChipValue = 2;
+                          context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle = 2;
                         });
                       },
                     ),
                     ChoiceChip(
-                      backgroundColor: choiceChipValue == 0
+                      backgroundColor: context
+                                  .read<IcarasdkViewModel>()
+                                  .selectedCorrelationStyle ==
+                              0
                           ? Colors.grey[300]
                           : Colors.grey[200],
                       label: Text(correlationStyles[3]),
-                      selected: choiceChipValue == 3,
+                      selected: context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle ==
+                          3,
                       onSelected: (bool value) {
                         setState(() {
-                          choiceChipValue = 3;
+                          context
+                              .read<IcarasdkViewModel>()
+                              .selectedCorrelationStyle = 3;
                         });
                       },
                     ),
@@ -174,7 +198,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
             const SizedBox(
               height: 50,
             ),
-            _rows.isEmpty
+            context.read<IcarasdkViewModel>().rowsCorrelationInputs.isEmpty
                 ? const Center(child: Text('No Data Loaded'))
                 : SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -190,7 +214,9 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                           controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
-                            columns: _columnNames
+                            columns: context
+                                .read<IcarasdkViewModel>()
+                                .columnNamesCorrealtionInputs
                                 .map(
                                   (c) => DataColumn(
                                     label: Text(
@@ -202,7 +228,12 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                             border:
                                 TableBorder.all(color: Colors.black, width: 1),
                             rows: [
-                              ..._rows.asMap().entries.map((entry) {
+                              ...context
+                                  .read<IcarasdkViewModel>()
+                                  .rowsCorrelationInputs
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 int rowIndex = entry.key;
                                 List<dynamic> row = entry.value;
 
@@ -231,8 +262,10 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                                             ),
                                             onChanged: (newValue) {
                                               setState(() {
-                                                _rows[rowIndex][cellIndex] =
-                                                    newValue;
+                                                context
+                                                        .read<IcarasdkViewModel>()
+                                                        .rowsCorrelationInputs[
+                                                    rowIndex][cellIndex] = newValue;
                                               });
                                             },
                                           ),
@@ -278,10 +311,16 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
     if (excel.tables[table]?.maxColumns != 0) {
       for (var data in excel.tables[table]!.rows[0].toList()) {
         if (data != null && data.value != null) {
-          _columnNames.add(data.value.toString());
+          context
+              .read<IcarasdkViewModel>()
+              .columnNamesCorrealtionInputs
+              .add(data.value.toString());
         }
       }
-      _columnNames.insert(0, "Risk No");
+      context
+          .read<IcarasdkViewModel>()
+          .columnNamesCorrealtionInputs
+          .insert(0, "Risk No");
       for (int i = 1; i < excel.tables[table]!.rows.length; i++) {
         List<dynamic> customRow = [];
         for (var cell in excel.tables[table]!.rows[i]) {
@@ -298,20 +337,20 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
     //}
 
     setState(() {
-      _rows = rows;
+      context.read<IcarasdkViewModel>().rowsCorrelationInputs = rows;
     });
   }
 
   void _clearCorrelations() {
     setState(() {
-      _columnNames = [];
-      _rows = [];
+      context.read<IcarasdkViewModel>().columnNamesCorrealtionInputs = [];
+      context.read<IcarasdkViewModel>().rowsCorrelationInputs = [];
     });
   }
 
   Future _saveCorrelations() async {
     final List<String> cellValues = [];
-    for (var row in _rows) {
+    for (var row in context.read<IcarasdkViewModel>().rowsCorrelationInputs) {
       for (var cell in row) {
         cellValues.add(cell.toString());
       }
@@ -320,11 +359,15 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
     await context.read<IcarasdkViewModel>().saveCorrelationInputs(
           context,
           cellValues,
-          _columnNames.length - 1,
-          choiceChipValue == 0,
-          choiceChipValue == 1,
-          choiceChipValue == 2,
-          choiceChipValue == 3,
+          context
+                  .read<IcarasdkViewModel>()
+                  .columnNamesCorrealtionInputs
+                  .length -
+              1,
+          context.read<IcarasdkViewModel>().selectedCorrelationStyle == 0,
+          context.read<IcarasdkViewModel>().selectedCorrelationStyle == 1,
+          context.read<IcarasdkViewModel>().selectedCorrelationStyle == 2,
+          context.read<IcarasdkViewModel>().selectedCorrelationStyle == 3,
         );
   }
 }

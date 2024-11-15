@@ -1,4 +1,3 @@
-// import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/data/app_logger.dart';
 import 'package:ICARA/services/navigation_service.dart';
 import 'package:ICARA/services/service_locator.dart';
@@ -8,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RunSimulationContent extends StatefulWidget {
-  const RunSimulationContent({super.key});
+  const RunSimulationContent({
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -17,15 +18,12 @@ class RunSimulationContent extends StatefulWidget {
 }
 
 class RunSimulationContentState extends State<RunSimulationContent> {
-  String _confidenceLevel = '99.50% BBB+';
-  int _numTrials = 10000;
-  String _seedValue = '1';
-  bool _isTCopulaChecked = false;
   final _seedValueController = TextEditingController();
 
   @override
   void initState() {
-    _seedValueController.text = _seedValue;
+    _seedValueController.text = context.read<IcarasdkViewModel>().seedValue;
+
     super.initState();
   }
 
@@ -56,7 +54,9 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                               width: 220,
                               child: DropdownButtonFormField<String>(
                                 isExpanded: true,
-                                value: _confidenceLevel,
+                                value: context
+                                    .read<IcarasdkViewModel>()
+                                    .confidenceLevel,
                                 focusColor: Colors.white,
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
@@ -95,7 +95,9 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    _confidenceLevel = value!;
+                                    context
+                                        .read<IcarasdkViewModel>()
+                                        .confidenceLevel = value!;
                                   });
                                 },
                                 dropdownColor: Colors.white,
@@ -115,7 +117,8 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                               width: 220,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
-                                value: _numTrials,
+                                value:
+                                    context.read<IcarasdkViewModel>().numTrials,
                                 focusColor: Colors.white,
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
@@ -146,7 +149,9 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    _numTrials = value!;
+                                    context
+                                        .read<IcarasdkViewModel>()
+                                        .numTrials = value!;
                                   });
                                 },
                                 dropdownColor: Colors.white,
@@ -168,7 +173,9 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                 controller: _seedValueController,
                                 onChanged: (value) {
                                   setState(() {
-                                    _seedValue = value;
+                                    context
+                                        .read<IcarasdkViewModel>()
+                                        .seedValue = value;
                                   });
                                 },
                                 decoration: InputDecoration(
@@ -199,10 +206,11 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Checkbox(
-                              value: _isTCopulaChecked,
+                              value: context.read<IcarasdkViewModel>().tCapula,
                               onChanged: (value) {
                                 setState(() {
-                                  _isTCopulaChecked = value!;
+                                  context.read<IcarasdkViewModel>().tCapula =
+                                      value!;
                                 });
                               },
                             ),
@@ -241,10 +249,18 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                       .read<IcarasdkViewModel>()
                                       .runSimulation(
                                         context,
-                                        _isTCopulaChecked,
-                                        _confidenceLevel,
-                                        _numTrials,
-                                        int.parse(_seedValue),
+                                        context
+                                            .read<IcarasdkViewModel>()
+                                            .tCapula,
+                                        context
+                                            .read<IcarasdkViewModel>()
+                                            .confidenceLevel,
+                                        context
+                                            .read<IcarasdkViewModel>()
+                                            .numTrials,
+                                        int.parse(context
+                                            .read<IcarasdkViewModel>()
+                                            .seedValue),
                                       );
                                 } on Exception catch (error, stackTrace) {
                                   AppLogger.instance.error(error, stackTrace);
