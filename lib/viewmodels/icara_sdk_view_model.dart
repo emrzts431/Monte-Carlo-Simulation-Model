@@ -60,6 +60,7 @@ class IcarasdkViewModel extends ChangeNotifier {
         //Load the assembled ICARA SDK
         String? filePath;
         if (!kDebugMode) {
+          AppLogger.instance.debug("Initating embedded sdk...");
           final byteData =
               await rootBundle.load('assets/icarasdk/ICARASdk.exe');
           final buffer = byteData.buffer;
@@ -69,6 +70,7 @@ class IcarasdkViewModel extends ChangeNotifier {
           var file = await File(filePath).writeAsBytes(buffer.asUint8List(
               byteData.offsetInBytes, byteData.lengthInBytes));
         } else {
+          AppLogger.instance.debug("Initating sdk from user's location...");
           //Development only!
           filePath = await Preferences.getSdkLocation();
           if (filePath == null || filePath.isEmpty) {
@@ -105,13 +107,10 @@ class IcarasdkViewModel extends ChangeNotifier {
   }
 
   Future initiateSdkFolder() async {
-    // Get the documents directory
     final directory = await getApplicationDocumentsDirectory();
 
-    // Create the folder path
     final folderPath = Directory('${directory.path}/ICARASdk');
 
-    // Check if the folder already exists
     if (await folderPath.exists()) {
       AppLogger.instance
           .debug("SDK folder already exists. Clearing it's content...");
