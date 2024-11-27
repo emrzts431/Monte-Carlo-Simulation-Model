@@ -10,6 +10,7 @@ import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InsurancePricing extends StatefulWidget {
   const InsurancePricing({super.key});
@@ -41,7 +42,7 @@ class _InsurancePricingState extends State<InsurancePricing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 231, 235, 240),
       appBar: AppBar(
         title: const Text('Insurance Pricing'),
         backgroundColor: Colors.white,
@@ -58,9 +59,9 @@ class _InsurancePricingState extends State<InsurancePricing> {
                 currentIndex = 0;
               });
             },
-            child: const Text(
+            child: Text(
               'Risk Inputs',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -77,9 +78,9 @@ class _InsurancePricingState extends State<InsurancePricing> {
                 currentIndex = 1;
               });
             },
-            child: const Text(
+            child: Text(
               'Insurance Parameters',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -96,9 +97,9 @@ class _InsurancePricingState extends State<InsurancePricing> {
                 currentIndex = 2;
               });
             },
-            child: const Text(
+            child: Text(
               'Correlation Inputs',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -115,9 +116,9 @@ class _InsurancePricingState extends State<InsurancePricing> {
                 currentIndex = 3;
               });
             },
-            child: const Text(
+            child: Text(
               'Simulation',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -134,9 +135,9 @@ class _InsurancePricingState extends State<InsurancePricing> {
                 currentIndex = 4;
               });
             },
-            child: const Text(
+            child: Text(
               'Report',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -144,7 +145,7 @@ class _InsurancePricingState extends State<InsurancePricing> {
           ),
         ],
       ),
-      drawer: CustomNavigationDrawer(),
+      drawer: const CustomNavigationDrawer(),
       body: Column(
         children: [
           Expanded(

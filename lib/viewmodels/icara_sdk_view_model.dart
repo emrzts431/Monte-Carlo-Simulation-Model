@@ -1,4 +1,3 @@
-import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/data/app_logger.dart';
 import 'package:ICARA/data/preferences.dart';
 import 'package:ICARA/services/navigation_service.dart';

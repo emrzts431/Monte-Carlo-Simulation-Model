@@ -1,4 +1,3 @@
-import 'package:ICARA/contents/correlation_inputs_content.dart';
 import 'package:ICARA/pages/capital_modeling.dart';
 import 'package:ICARA/pages/home_page.dart';
 import 'package:ICARA/pages/raroc.dart';
@@ -15,6 +14,7 @@ import 'package:ICARA/dialogs/degrees_of_freedom_dialog.dart';
 import 'package:ICARA/dialogs/global_correlation_dialog.dart';
 import 'package:ICARA/dialogs/model_assumption_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({super.key});
@@ -39,9 +39,9 @@ class CustomNavigationDrawer extends StatelessWidget {
                   'assets/img/mc_risk_modelling.png',
                   scale: 5,
                 ),
-                const Text(
+                Text(
                   'Monte Carlo Plus',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 18,
                   ),

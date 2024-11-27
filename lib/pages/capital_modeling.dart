@@ -8,6 +8,7 @@ import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CapitalModeling extends StatefulWidget {
   const CapitalModeling({super.key});
@@ -41,7 +42,7 @@ class _CapitalModelingState extends State<CapitalModeling> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 231, 235, 240),
       appBar: AppBar(
         title: const Text('Capital Modelling'),
         backgroundColor: Colors.white,
@@ -58,9 +59,9 @@ class _CapitalModelingState extends State<CapitalModeling> {
                 currentIndex = 0;
               });
             },
-            child: const Text(
+            child: Text(
               'Risk Inputs',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -77,9 +78,9 @@ class _CapitalModelingState extends State<CapitalModeling> {
                 currentIndex = 1;
               });
             },
-            child: const Text(
+            child: Text(
               'Validation',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -96,9 +97,9 @@ class _CapitalModelingState extends State<CapitalModeling> {
                 currentIndex = 2;
               });
             },
-            child: const Text(
+            child: Text(
               'Correlation Inputs',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -115,9 +116,9 @@ class _CapitalModelingState extends State<CapitalModeling> {
                 currentIndex = 3;
               });
             },
-            child: const Text(
+            child: Text(
               'Simulation',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -134,9 +135,9 @@ class _CapitalModelingState extends State<CapitalModeling> {
                 currentIndex = 4;
               });
             },
-            child: const Text(
+            child: Text(
               'Report',
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.poppins(color: Colors.white),
             ),
           ),
           const SizedBox(
@@ -144,8 +145,8 @@ class _CapitalModelingState extends State<CapitalModeling> {
           ),
         ],
       ),
-      drawer: CustomNavigationDrawer(),
-      body: Column(
+      drawer: const CustomNavigationDrawer(),
+      body: Stack(
         children: [
           const SizedBox(
             height: 50,

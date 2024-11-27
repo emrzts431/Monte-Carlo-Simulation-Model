@@ -5,6 +5,7 @@ import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RunSimulationContent extends StatefulWidget {
   const RunSimulationContent({
@@ -195,7 +196,7 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                   ),
                                   labelText: 'Seed Value',
                                 ),
-                                style: const TextStyle(color: Colors.black),
+                                style: GoogleFonts.poppins(color: Colors.black),
                                 cursorColor: Colors.black,
                               ),
                             ),
@@ -231,9 +232,9 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                 size: 32,
                                 color: Colors.white,
                               ),
-                              label: const Text(
+                              label: Text(
                                 "Run Simulation",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -241,7 +242,7 @@ class RunSimulationContentState extends State<RunSimulationContent> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 10),
                                 backgroundColor: const Color(0xff00B0F0),
-                                textStyle: const TextStyle(fontSize: 16),
+                                textStyle: GoogleFonts.poppins(fontSize: 16),
                               ),
                               onPressed: () async {
                                 try {

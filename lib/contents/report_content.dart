@@ -9,6 +9,7 @@ import 'package:ICARA/widgets/indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReportContent extends StatefulWidget {
   @override
@@ -207,9 +208,20 @@ class ReportContentState extends State<ReportContent> {
   Widget _factorsListView(
       List<String> names, List<double> values, String listName) {
     return Container(
-      height: 300,
-      width: MediaQuery.of(context).size.width * 0.35,
-      decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+      height: 400,
+      width: MediaQuery.of(context).size.width * 0.33,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1,
+            offset: Offset(0, 1),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.all(30),
       child: ListView.separated(
         separatorBuilder: (context, index) => const Divider(
           color: Colors.black,
@@ -221,19 +233,21 @@ class ReportContentState extends State<ReportContent> {
               leading: const SizedBox.shrink(),
               title: Text(
                 listName,
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              trailing: const Text(
+              trailing: Text(
                 'Loss in Millions',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             );
           }
           return ListTile(
+            minTileHeight: 0,
+            minVerticalPadding: 0,
             leading: Text("${(index - 1) + 1}"),
             title: Text(
               names[index - 1],
@@ -260,24 +274,34 @@ class ReportContentState extends State<ReportContent> {
     });
     return Container(
       height: 500,
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: MediaQuery.of(context).size.width * 0.705,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1,
+            offset: Offset(0, 1),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(5),
       ),
+      padding: const EdgeInsets.all(30),
       child: ListView.separated(
           itemBuilder: (context, index) {
             if (index == 0) {
-              return const ListTile(
-                leading: SizedBox.shrink(),
+              return ListTile(
+                minTileHeight: 0,
+                minVerticalPadding: 6,
                 title: Text(
                   'Risks',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 trailing: Text(
                   'Loss in millions',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -286,6 +310,8 @@ class ReportContentState extends State<ReportContent> {
             int indexOfRisk = riskRankings.indexOf(sortedList[index]);
 
             return ListTile(
+              minTileHeight: 0,
+              minVerticalPadding: 4,
               leading: Text('Risk ${indexOfRisk + 1}'),
               title: Text('${riskDescriptions?[indexOfRisk]}'),
               trailing:
@@ -343,17 +369,24 @@ class ReportContentState extends State<ReportContent> {
     return riskRankings.isNotEmpty
         ? Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-              ),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 1,
+                  offset: Offset(0, 1),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(5),
             ),
-            height: 300,
-            width: MediaQuery.of(context).size.width * 0.7,
+            padding: const EdgeInsets.all(30),
+            height: 500,
+            width: MediaQuery.of(context).size.width * 0.73,
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Risk Ranking',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -395,10 +428,17 @@ class ReportContentState extends State<ReportContent> {
     return values.isNotEmpty
         ? Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-              ),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 1,
+                  offset: Offset(0, 1),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(5),
             ),
+            padding: const EdgeInsets.all(30),
             height: 400,
             width: MediaQuery.of(context).size.width * 0.35,
             child: Column(
@@ -406,7 +446,7 @@ class ReportContentState extends State<ReportContent> {
               children: [
                 Text(
                   chartTitle,
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -476,17 +516,24 @@ class ReportContentState extends State<ReportContent> {
     return lossesFromRisks.isNotEmpty && bins.isNotEmpty
         ? Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-              ),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 1,
+                  offset: Offset(0, 1),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(5),
             ),
-            height: 350,
-            width: MediaQuery.of(context).size.width * 0.7,
+            padding: const EdgeInsets.all(30),
+            height: 500,
+            width: MediaQuery.of(context).size.width * 0.73,
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Losses from all Risks',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                   ),
                 ),

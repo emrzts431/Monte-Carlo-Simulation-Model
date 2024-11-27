@@ -3,6 +3,7 @@ import 'package:ICARA/viewmodels/icara_sdk_view_model.dart';
 import 'package:ICARA/widgets/snackbar_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RarocParametersContent extends StatefulWidget {
   const RarocParametersContent({super.key});
@@ -40,9 +41,9 @@ class RarocParametersContentState extends State<RarocParametersContent> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "RAROC Input",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 24,
                           ),
                         ),
@@ -81,7 +82,7 @@ class RarocParametersContentState extends State<RarocParametersContent> {
                                     ),
                                   ),
                                 ),
-                                style: const TextStyle(
+                                style: GoogleFonts.poppins(
                                     color: Colors.black, fontSize: 14),
                                 cursorColor: Colors.black,
                               ),
@@ -102,9 +103,9 @@ class RarocParametersContentState extends State<RarocParametersContent> {
                                 size: 20,
                                 color: Colors.white,
                               ),
-                              label: const Text(
+                              label: Text(
                                 "Save",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -112,7 +113,7 @@ class RarocParametersContentState extends State<RarocParametersContent> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30, vertical: 16),
                                 backgroundColor: const Color(0xff00B0F0),
-                                textStyle: const TextStyle(fontSize: 16),
+                                textStyle: GoogleFonts.poppins(fontSize: 16),
                               ),
                               onPressed: () {
                                 try {

@@ -21,7 +21,7 @@ class _HomePageState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 231, 235, 240),
       drawer: const CustomNavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,

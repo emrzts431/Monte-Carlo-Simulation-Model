@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PickRisksContent extends StatefulWidget {
   const PickRisksContent({super.key});
@@ -67,9 +68,9 @@ class PickRisksContentState extends State<PickRisksContent> {
                       side: const BorderSide(color: Colors.black, width: 2),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Import Excel',
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.poppins(color: Colors.black),
                     ),
                   ),
                 ),
@@ -87,9 +88,9 @@ class PickRisksContentState extends State<PickRisksContent> {
                       side: const BorderSide(color: Colors.black, width: 2),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Clear Risks',
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.poppins(color: Colors.black),
                     ),
                   ),
                 ),
@@ -112,9 +113,9 @@ class PickRisksContentState extends State<PickRisksContent> {
                                 const BorderSide(color: Colors.black, width: 2),
                             elevation: 0,
                           ),
-                          child: const Text(
+                          child: Text(
                             'Save Risks',
-                            style: TextStyle(color: Colors.black),
+                            style: GoogleFonts.poppins(color: Colors.black),
                           ),
                         ),
                 ),

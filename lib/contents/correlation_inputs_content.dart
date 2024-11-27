@@ -6,6 +6,7 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CorrelationInputsContent extends StatefulWidget {
   const CorrelationInputsContent({super.key});
@@ -42,6 +43,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                 ChoiceChip(
                   padding: const EdgeInsets.all(10),
                   backgroundColor: Colors.grey[200],
+                  side: const BorderSide(color: Colors.black),
                   label: Text(
                     correlationStyles[0],
                   ),
@@ -71,6 +73,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                               0
                           ? Colors.grey[300]
                           : Colors.grey[200],
+                      side: const BorderSide(color: Colors.black),
                       label: Text(correlationStyles[1]),
                       selected: context
                               .read<IcarasdkViewModel>()
@@ -91,6 +94,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                               0
                           ? Colors.grey[300]
                           : Colors.grey[200],
+                      side: const BorderSide(color: Colors.black),
                       label: Text(correlationStyles[2]),
                       selected: context
                               .read<IcarasdkViewModel>()
@@ -111,6 +115,7 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                               0
                           ? Colors.grey[300]
                           : Colors.grey[200],
+                      side: const BorderSide(color: Colors.black),
                       label: Text(correlationStyles[3]),
                       selected: context
                               .read<IcarasdkViewModel>()
@@ -142,9 +147,9 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                       side: const BorderSide(color: Colors.black, width: 2),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Import Excel',
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.poppins(color: Colors.black),
                     ),
                   ),
                 ),
@@ -162,9 +167,9 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                       side: const BorderSide(color: Colors.black, width: 2),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Clear Correlations',
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.poppins(color: Colors.black),
                     ),
                   ),
                 ),
@@ -187,9 +192,9 @@ class CorrelationInputsContentState extends State<CorrelationInputsContent> {
                                 const BorderSide(color: Colors.black, width: 2),
                             elevation: 0,
                           ),
-                          child: const Text(
+                          child: Text(
                             'Save Correlations',
-                            style: TextStyle(color: Colors.black),
+                            style: GoogleFonts.poppins(color: Colors.black),
                           ),
                         ),
                 ),
